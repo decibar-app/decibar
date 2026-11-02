@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decibar, SoundSource and macOS compared</title>
+  <meta name="description"
+    content="How Decibar, Rogue Amoeba's SoundSource and macOS handle volume on HDMI and DisplayPort monitor speakers, with features, requirements and prices side by side.">
+  <link rel="icon" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="index.html">Overview</a>
+      <a class="brand" href="index.html"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>Where does your volume change?</h1>
+          <div class="hero-aside">
+            <p class="lead">macOS leaves monitor speakers without a level, and two apps add one.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+        </div>
+        <div class="panels routes">
+          <div>
+            <p class="route-name">macOS</p>
+            <p class="route">Nowhere</p>
+            <p>HDMI and DisplayPort speakers offer it no volume control.</p>
+          </div>
+          <div>
+            <p class="route-name">SoundSource</p>
+            <p class="route">On the Mac</p>
+            <p>It adds a volume control in software, for any output.</p>
+          </div>
+          <div>
+            <p class="route-name">Decibar</p>
+            <p class="route">In the monitor</p>
+            <p>DDC/CI sets the speakers’ own level. Software goes lower.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="versus">
+      <div class="container">
+        <h2>Nine jobs, three answers.</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">macOS</th>
+              <th scope="col">SoundSource</th>
+              <th scope="col">Decibar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Volume keys on HDMI or DisplayPort</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">Yes</td>
+              <td data-name="Decibar" class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Monitor’s own volume over DDC/CI</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource">Not listed</td>
+              <td data-name="Decibar" class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Volume for each app</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">Up to 400%</td>
+              <td data-name="Decibar" class="yes">Up to 150%</td>
+            </tr>
+            <tr>
+              <th scope="row">Ten-band equalizer</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">For each output and app</td>
+              <td data-name="Decibar" class="yes">For each output</td>
+            </tr>
+            <tr>
+              <th scope="row">AutoEq headphone profiles</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">Built in</td>
+              <td data-name="Decibar" class="yes">Import a file</td>
+            </tr>
+            <tr>
+              <th scope="row">Audio Unit plugins</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">Yes</td>
+              <td data-name="Decibar">No</td>
+            </tr>
+            <tr>
+              <th scope="row">Send apps to different outputs</th>
+              <td data-name="macOS">No</td>
+              <td data-name="SoundSource" class="yes">Yes</td>
+              <td data-name="Decibar">No</td>
+            </tr>
+            <tr>
+              <th scope="row">Lower other audio during calls</th>
+              <td data-name="macOS">No setting</td>
+              <td data-name="SoundSource">Not listed</td>
+              <td data-name="Decibar" class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Microphone permission for audio features</th>
+              <td data-name="macOS">Not needed</td>
+              <td data-name="SoundSource">Required</td>
+              <td data-name="Decibar">Not needed</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">“Not listed” means Rogue Amoeba’s pages don’t mention it. SoundSource 6.1.6, read on 2 November 2026.</p>
+      </div>
+    </section>
+
+    <section class="choice">
+      <div class="container">
+        <h2>Which one fits your desk?</h2>
+        <div class="panels choice-grid">
+          <div>
+            <h3>SoundSource suits a full audio setup</h3>
+            <p class="reading-s">$49</p>
+            <p class="note">macOS 15 or later.</p>
+            <ul>
+              <li>You send apps to different outputs or AirPlay devices</li>
+              <li>You want Audio Unit plugins, on the system or on one app</li>
+                          </ul>
+            <p>The trial has every feature, and adds noise to adjusted audio after 20 minutes until you relaunch.</p>
+          </div>
+          <div>
+            <h3>Decibar suits a monitor on your desk</h3>
+            <p class="reading-s">$9.99</p>
+            <p class="note">For Pro. macOS 26 or later on Apple silicon.</p>
+            <ul>
+              <li>You want the monitor’s own volume, with nothing in the audio path</li>
+              <li>You want music to drop during calls</li>
+              <li>You’d rather not grant microphone access</li>
+            </ul>
+            <p>Monitor control stays free. Pro features are free for 14 days.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="container">
+        <div class="close-top">
+          <div>
+            <h2>Your monitor decides.</h2>
+            <p class="lead">Try the free download first. <a href="faq.html">The FAQ</a> covers monitors, keys and refunds.
+            </p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+          <div class="sources">
+            <p>SoundSource details come from Rogue Amoeba’s <a
+                href="https://rogueamoeba.com/soundsource/">product page</a>, <a
+                href="https://rogueamoeba.com/support/manuals/soundsource">manual</a> and <a
+                href="https://rogueamoeba.com/soundsource/whatsnew.php">release notes</a>. Prices are in US dollars, before tax.</p>
+            <p>SoundSource is a product of Rogue Amoeba, which has no connection to Decibar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Spotted something out of date? Write to us.</p>
+        <a class="brand" href="index.html"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="help.html">Help</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="terms.html#refunds">Refunds</a></li>
+        <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+
+</html>
