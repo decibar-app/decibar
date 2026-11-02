@@ -13,6 +13,7 @@
 /* Hallmark · page: volume-methods · redesign: full, content order kept, translated to English at the owner's request · job: try · hero: Banner · shape: Long Document on pinned chapters · system: Console, no new tokens */
 /* Hallmark · answered F4 · the pressed state on volume-methods is a tinted selection, not a second primary button */
 /* Hallmark · answered F15 · the extra column gaps sit inside the demonstration panels on volume-methods, each sized to its own controls */
+/* Hallmark · page: 404 · job: return · hero: Banner over the instrument · signature: a level that stays at −∞ dB however far it is raised · system: Console, no new tokens · finish-review: subagent · 6 findings · 6 resolved */
 /* Hallmark · pre-emit critique: P4 H4 E5 S5 R4 V4 · weakest: H, the FAQ is rows of equal weight, so the first question became the hero and the rest sit under pinned heads */
 @import url("./tokens.css");
 @import url("./base.css");
@@ -61,6 +62,12 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .hero h1 { max-width: 13ch; overflow-wrap: break-word; min-width: 0; }
 .hero-aside .lead { color: var(--color-ink-2); }
 .hero-aside .btn { margin-top: var(--space-lg); }
+.hero-aside .faq-actions .btn { margin-top: 0; }
+.error-page { display: flex; flex-direction: column; min-height: 100svh; }
+.error-page main { flex: 1; }
+.error-page .reading-cell { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-xs) var(--space-lg); }
+.error-page .reading-s { color: var(--color-cool); }
+@media (max-width: 40rem) { .error-page .faq-actions .btn { flex: 1 1 100%; } }
 .instrument { margin-top: var(--space-2xl); grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 .reading-cell { display: grid; align-content: center; gap: var(--space-xs); padding: var(--space-lg) var(--space-xl); background: var(--color-paper-3); }
 .reading { display: block; font-family: var(--font-outlier); font-size: var(--text-display); font-weight: 400; font-variant-numeric: tabular-nums slashed-zero; letter-spacing: -0.04em; line-height: 1; color: var(--color-cool); white-space: nowrap; }
@@ -199,10 +206,17 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .versus tbody th { width: 40%; color: var(--color-ink); }
 .versus thead th:nth-child(4), .versus td:nth-of-type(3) { background: var(--color-paper-2); }
 .versus .yes { color: var(--color-ok); }
+.versus--pair thead th:nth-child(4), .versus--pair td:nth-of-type(3) { background: none; }
+.versus--pair thead th:nth-child(3), .versus--pair td:nth-of-type(2) { background: var(--color-paper-2); }
+.versus-plain tbody th { width: 28%; }
+.versus-plain thead th:nth-child(4), .versus-plain td:nth-of-type(3) { background: none; }
 .choice { padding-block: var(--section-gap-s); background: var(--color-paper-3); border-block: var(--rule-hair) solid var(--color-rule); }
 .choice h2 { margin-bottom: var(--space-2xl); }
 .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .choice-grid > div { padding: var(--space-xl); }
+.compare-more { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.doc-body > p + p { margin-top: var(--space-md); }
+.compare-more p { margin-top: var(--space-sm); }
 .choice-grid .reading-s { display: block; margin-top: var(--space-lg); }
 .choice-grid ul { margin: var(--space-lg) 0; padding-left: 1.2em; color: var(--color-ink-2); }
 .choice-grid li + li { margin-top: var(--space-xs); }
@@ -231,7 +245,7 @@ body > main:not(.home) p, body > main:not(.home) ul { margin-block: var(--space-
   .versus tr { padding-block: var(--space-sm); border-bottom: var(--rule-hair) solid var(--color-rule); }
   .versus th, .versus td { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-sm); width: auto; padding: var(--space-2xs) 0; border-bottom: 0; }
   .versus tbody th { display: block; width: auto; font-weight: 500; }
-  .versus td:nth-of-type(3) { background: transparent; }
+  .versus td:nth-of-type(3), .versus--pair td:nth-of-type(2) { background: transparent; }
   .versus td::before { content: attr(data-name); color: var(--color-muted); font-family: var(--font-body); font-size: var(--text-sm); }
   .steps li { gap: var(--space-2xs); }
   .masthead .container { grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-md); }

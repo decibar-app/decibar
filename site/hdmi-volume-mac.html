@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mac Volume Keys Not Working on an HDMI or DisplayPort Monitor</title>
+  <meta name="description"
+    content="Why macOS disables the volume slider and keys on HDMI and DisplayPort monitors, how to confirm it, and five ways to change the volume, with the cost of each.">
+  <link rel="icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="canonical" href="https://decibar.coypu.me/hdmi-volume-mac">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Decibar">
+  <meta property="og:title" content="Mac Volume Keys Not Working on an HDMI or DisplayPort Monitor">
+  <meta property="og:description" content="Why macOS disables the volume slider and keys on HDMI and DisplayPort monitors, how to confirm it, and five ways to change the volume, with the cost of each.">
+  <meta property="og:url" content="https://decibar.coypu.me/hdmi-volume-mac">
+  <meta property="og:image" content="https://decibar.coypu.me/images/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Decibar: volume for your monitor’s speakers on a Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Mac Volume Keys Not Working on an HDMI or DisplayPort Monitor","description":"Why macOS disables the volume slider and keys on HDMI and DisplayPort monitors, how to confirm it, and five ways to change the volume, with the cost of each.","url":"https://decibar.coypu.me/hdmi-volume-mac","image":"https://decibar.coypu.me/images/og.png","datePublished":"2026-11-02","dateModified":"2026-11-02","author":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"},"publisher":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Decibar","item":"https://decibar.coypu.me/"},{"@type":"ListItem","position":2,"name":"HDMI volume on Mac","item":"https://decibar.coypu.me/hdmi-volume-mac"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is the volume slider greyed out for my monitor?","acceptedAnswer":{"@type":"Answer","text":"HDMI and DisplayPort carry digital audio straight to the monitor, and the amp inside the monitor sets the loudness. macOS sees no volume control on that output, so the slider in Sound settings is disabled and the volume keys show a “not available” symbol."}},{"@type":"Question","name":"Is this a bug in macOS?","acceptedAnswer":{"@type":"Answer","text":"No. It’s how these outputs behave on a Mac. Restarting or reinstalling won’t add a level, because the device offers macOS none to change."}},{"@type":"Question","name":"Does DisplayPort or USB-C behave differently from HDMI?","acceptedAnswer":{"@type":"Answer","text":"DisplayPort behaves the same way. A USB-C cable depends on what it carries: DisplayPort over USB-C behaves like DisplayPort, while a monitor that appears as a USB audio device can offer macOS a normal volume control."}},{"@type":"Question","name":"Can I go quieter than the monitor’s lowest setting?","acceptedAnswer":{"@type":"Answer","text":"Not with the monitor’s own volume. Lowering the sound before it leaves the Mac can, because it doesn’t depend on the amp. Decibar’s software volume goes down to −40 dB."}},{"@type":"Question","name":"Do I need DDC/CI?","acceptedAnswer":{"@type":"Answer","text":"Only to change the monitor’s own volume. Software volume works without it, so a monitor, dock or adapter that blocks DDC/CI can still get a level."}}]}]}</script>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="/">Overview</a>
+      <a class="brand" href="/"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>Why your Mac’s volume keys don’t work on an HDMI monitor</h1>
+          <div class="hero-aside">
+            <p class="lead">HDMI and DisplayPort send audio straight to the monitor, so macOS has no level to change.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="buy-steps">
+      <div class="container">
+        <h2>Check that this is your problem.</h2>
+        <ol class="steps">
+          <li><strong>Find the output</strong>
+            <p>Open System Settings &gt; Sound &gt; Output and select your monitor.</p>
+          </li>
+          <li><strong>Look at the slider</strong>
+            <p>If the output volume slider is disabled, macOS has nothing to change on this monitor.</p>
+          </li>
+          <li><strong>Press a volume key</strong>
+            <p>A “not available” symbol on screen confirms it. The monitor’s speakers keep playing at the level set on the monitor.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Where the level lives.</h2>
+        </div>
+        <div class="doc-body">
+          <p>Built-in speakers and USB audio devices offer macOS a volume control. HDMI and DisplayPort outputs don’t. The signal is digital, and the amp inside the monitor sets how loud it plays.</p>
+          <p>That leaves three ways to change the loudness: tell the monitor, lower the sound before it reaches the monitor, or use a different output. A combined device from Audio MIDI Setup doesn’t help, because it gets no overall volume either.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="versus">
+      <div class="container">
+        <h2>Five ways to change the volume.</h2>
+        <table class="versus-plain">
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">Cost</th>
+              <th scope="col">What changes</th>
+              <th scope="col">The catch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Use the monitor’s buttons</th>
+              <td data-name="Cost">Free</td>
+              <td data-name="What changes">The monitor’s own level</td>
+              <td data-name="The catch">Several menus deep, and no volume keys</td>
+            </tr>
+            <tr>
+              <th scope="row">Send volume commands over the cable</th>
+              <td data-name="Cost">Free with Decibar</td>
+              <td data-name="What changes">The monitor’s own level, over DDC/CI</td>
+              <td data-name="The catch">Needs DDC/CI. Docks and adapters can block it</td>
+            </tr>
+            <tr>
+              <th scope="row">Lower the sound on the Mac</th>
+              <td data-name="Cost">Free with Decibar</td>
+              <td data-name="What changes">The sound before it leaves the Mac, to −40 dB</td>
+              <td data-name="The catch">Installs an audio driver, with your administrator password</td>
+            </tr>
+            <tr>
+              <th scope="row">Use an app’s own slider</th>
+              <td data-name="Cost">Free</td>
+              <td data-name="What changes">That app only</td>
+              <td data-name="The catch">Not system-wide, and not on the keyboard</td>
+            </tr>
+            <tr>
+              <th scope="row">Change the output</th>
+              <td data-name="Cost">The price of the gear</td>
+              <td data-name="What changes">A USB DAC, USB or Bluetooth speakers, or speakers on the monitor’s 3.5mm jack</td>
+              <td data-name="The catch">You stop using the monitor’s speakers</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">Decibar’s free version covers both Mac options and puts them on your keyboard. <a href="/volume-methods">How Decibar handles monitor volume</a> compares all thirteen methods.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Common questions.</h2>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>
+              <h3>Why is the volume slider greyed out for my monitor?</h3>
+            </summary>
+            <div class="answer">
+              <p>HDMI and DisplayPort carry digital audio straight to the monitor, and the amp inside the monitor sets the loudness. macOS sees no volume control on that output, so the slider in Sound settings is disabled and the volume keys show a “not available” symbol.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Is this a bug in macOS?</h3>
+            </summary>
+            <div class="answer">
+              <p>No. It’s how these outputs behave on a Mac. Restarting or reinstalling won’t add a level, because the device offers macOS none to change.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Does DisplayPort or USB-C behave differently from HDMI?</h3>
+            </summary>
+            <div class="answer">
+              <p>DisplayPort behaves the same way. A USB-C cable depends on what it carries: DisplayPort over USB-C behaves like DisplayPort, while a monitor that appears as a USB audio device can offer macOS a normal volume control.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Can I go quieter than the monitor’s lowest setting?</h3>
+            </summary>
+            <div class="answer">
+              <p>Not with the monitor’s own volume. Lowering the sound before it leaves the Mac can, because it doesn’t depend on the amp. Decibar’s software volume goes down to −40 dB.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Do I need DDC/CI?</h3>
+            </summary>
+            <div class="answer">
+              <p>Only to change the monitor’s own volume. Software volume works without it, so a monitor, dock or adapter that blocks DDC/CI can still get a level.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="container">
+        <div class="close-top">
+          <div>
+            <h2>Try it on your monitor.</h2>
+            <p class="lead">If the free slider moves your monitor’s volume, DDC/CI works. If it doesn’t, software volume is still there.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+          <div class="sources">
+            <p>Decibar needs macOS 26 or later on Apple silicon.</p>
+            <p>On an older Mac, the monitor’s buttons and a different output still work. So do other apps: see <a href="/compare">how they compare</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Found a monitor that behaves differently? Write to us.</p>
+        <a class="brand" href="/"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/volume-methods">How it works</a></li>
+        <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
+        <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+
+</html>

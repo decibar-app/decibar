@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | Decibar</title>
+  <meta name="description" content="This page isn’t on the Decibar site. Go back to the overview or read the FAQ.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="error-page">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="/">Overview</a>
+      <a class="brand" href="/"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>Nothing’s playing at this address.</h1>
+          <div class="hero-aside">
+            <p class="lead">The link may be old, or the page may have moved.</p>
+            <div class="faq-actions">
+              <a class="btn" href="/">Back to Decibar</a>
+              <a class="btn btn--quiet" href="/faq">Read the FAQ</a>
+            </div>
+          </div>
+        </div>
+        <div class="panels instrument">
+          <div class="reading-cell">
+            <span class="reading">404</span>
+            <span class="reading-s">−∞ dB</span>
+          </div>
+          <div class="control-cell">
+            <div class="control-head"><label for="level">Turn it up</label><span>Drag the level</span></div>
+            <input class="meter" id="level" type="range" min="0" max="16" step="1" value="0" style="--v:0%"
+              aria-valuetext="−∞ dB">
+            <div class="ticks" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <p class="note" id="levelNote" role="status">No signal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Followed a broken link? <a href="mailto:team.dada.co+decibar@gmail.com">Write to us</a>.</p>
+        <a class="brand" href="/"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/volume-methods">How it works</a></li>
+        <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
+        <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    const level = document.getElementById('level'), note = document.getElementById('levelNote');
+    level.addEventListener('input', () => {
+      level.style.setProperty('--v', level.value / 16 * 100 + '%');
+      note.textContent = level.value === '0' ? 'No signal.' : 'Still −∞ dB. There’s no page here to turn up.';
+    });
+  </script>
+</body>
+
+</html>

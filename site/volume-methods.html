@@ -4,16 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How Decibar handles monitor volume</title>
+  <title>13 Ways to Control Monitor Speaker Volume on a Mac | Decibar</title>
   <meta name="description"
     content="Thirteen ways to change a monitor's speaker volume on a Mac, and why Decibar uses DDC/CI and a virtual audio driver together. Move the controls to see how each works.">
-  <link rel="icon" href="images/favicon.png">
+  <link rel="icon" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
   <style>
     .chapters { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--color-paper); border-block: var(--rule-hair) solid var(--color-rule); }
     .chapters .container { display: flex; gap: var(--space-lg); overflow-x: auto; scrollbar-width: none; }
@@ -147,6 +147,19 @@
       .btn-s, .node, .bar16-fill { transition: none; }
     }
   </style>
+  <link rel="canonical" href="https://decibar.coypu.me/volume-methods">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Decibar">
+  <meta property="og:title" content="13 Ways to Control Monitor Speaker Volume on a Mac | Decibar">
+  <meta property="og:description" content="Thirteen ways to change a monitor&#x27;s speaker volume on a Mac, and why Decibar uses DDC/CI and a virtual audio driver together. Move the controls to see how each works.">
+  <meta property="og:url" content="https://decibar.coypu.me/volume-methods">
+  <meta property="og:image" content="https://decibar.coypu.me/images/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Decibar: volume for your monitor’s speakers on a Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Decibar","item":"https://decibar.coypu.me/"},{"@type":"ListItem","position":2,"name":"How Decibar handles monitor volume","item":"https://decibar.coypu.me/volume-methods"}]},{"@type":"TechArticle","headline":"How Decibar handles monitor volume","description":"Thirteen ways to change a monitor's speaker volume on a Mac, and why Decibar uses DDC/CI and a virtual audio driver together. Move the controls to see how each works.","url":"https://decibar.coypu.me/volume-methods","image":"https://decibar.coypu.me/images/og.png","datePublished":"2026-11-02","dateModified":"2026-11-02","author":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"},"publisher":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"}}]}</script>
 </head>
 
 <body>
@@ -163,8 +176,8 @@
 
   <header class="masthead" id="top">
     <div class="container">
-      <a class="nav-link" href="help.html">Help</a>
-      <a class="brand" href="index.html"><svg aria-hidden="true">
+      <a class="nav-link" href="/help">Help</a>
+      <a class="brand" href="/"><svg aria-hidden="true">
           <use href="#logo" />
         </svg>Decibar</a>
       <a class="btn btn--quiet"
@@ -458,10 +471,10 @@
           <p>The volume keys don’t touch the monitor’s hardware volume. You set a ceiling with monitor volume, then make
             everyday changes below it with the keys.</p>
 
-          <h3>Pro features (method 11)</h3>
-          <p>Per-app volume (0 to 150%), the ten-band EQ, boost up to <span class="mono">12 dB</span> and lowering other
-            audio during calls all use the same driver path. In Pro they also work on outputs other than HDMI and
-            DisplayPort. When sound could go over the maximum, a limiter prevents clipping.</p>
+          <h3>Per-app volume and Pro features (method 11)</h3>
+          <p>Per-app volume (0 to 150%) is free. The ten-band EQ, boost up to <span class="mono">12 dB</span> and
+            lowering other audio during calls are Pro. All of them use the same driver path and also work on outputs
+            other than HDMI and DisplayPort. When sound could go over the maximum, a limiter prevents clipping.</p>
 
           <h3>The path sound takes</h3>
           <div class="stage">
@@ -597,17 +610,20 @@
     <div class="container">
       <div>
         <p class="letter-note">Questions about how it works? Write to us.</p>
-        <a class="brand" href="index.html"><svg aria-hidden="true">
+        <a class="brand" href="/"><svg aria-hidden="true">
             <use href="#logo" />
           </svg>Decibar</a>
       </div>
       <ul>
         <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="help.html">Help</a></li>
-        <li><a href="compare.html">Compare</a></li>
-        <li><a href="privacy.html">Privacy</a></li>
-        <li><a href="terms.html">Terms</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/volume-methods">How it works</a></li>
+        <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
         <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
       </ul>
     </div>
