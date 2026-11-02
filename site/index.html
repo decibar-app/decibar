@@ -1,203 +1,354 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Decibar: volume keys for your monitor’s speakers</title>
-<meta name="description" content="Control the speakers in your HDMI or DisplayPort monitor from the Mac menu bar and volume keys. Free to download. Pro is $9.99 once.">
-<link rel="icon" href="images/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decibar: volume keys for your monitor’s speakers</title>
+  <meta name="description"
+    content="Control the speakers in your HDMI or DisplayPort monitor from the Mac menu bar and volume keys. Free to download. Pro is $9.99 once.">
+  <link rel="icon" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="240 300 500 424"><path fill="currentColor" d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z"/><g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round"><path d="M572 442a92 92 0 0 1 0 140"/><path d="M634 358a196 196 0 0 1 0 308"/></g></symbol></svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
 
-<header class="masthead" id="top"><div class="container">
-  <a class="nav-link" href="#price">Pricing</a>
-  <a class="brand" href="#hero"><svg aria-hidden="true"><use href="#logo"/></svg>Decibar</a>
-  <a class="btn btn--quiet" href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
-</div></header>
-
-<main class="home">
-<section class="hero" id="hero"><div class="container">
-  <div class="hero-text">
-    <h1>macOS can’t turn this monitor down.</h1>
-    <div class="hero-aside">
-      <p class="lead">Decibar puts your monitor’s speakers on the volume keys.</p>
-      <a class="btn" href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="#price">Pricing</a>
+      <a class="brand" href="#hero"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
     </div>
-  </div>
-  <div class="panels instrument">
-    <div class="reading-cell">
-      <span class="reading" id="levelText">−12.5 dB</span>
-      <span class="measured" id="levelPercent">69%</span>
+  </header>
+
+  <main class="home">
+    <section class="hero" id="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>macOS can’t turn this monitor down.</h1>
+          <div class="hero-aside">
+            <p class="lead">Decibar puts your monitor’s speakers on the volume keys.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+        </div>
+        <div class="panels instrument">
+          <div class="reading-cell">
+            <span class="reading" id="levelText">−12.5 dB</span>
+            <span class="measured" id="levelPercent">69%</span>
+          </div>
+          <div class="control-cell">
+            <div class="control-head"><label for="level">Try software volume</label><span>Drag, or use the arrow
+                keys</span></div>
+            <input class="meter" id="level" type="range" min="0" max="16" step="1" value="11" style="--v:68.75%"
+              aria-label="Page volume, sixteen steps">
+            <div class="ticks" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="compare">
+      <div class="container">
+        <h2>The same monitor, with and without.</h2>
+        <table class="diff">
+          <thead>
+            <tr>
+              <th scope="col">On HDMI or DisplayPort</th>
+              <th scope="col">macOS alone</th>
+              <th scope="col">With Decibar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Volume keys</th>
+              <td class="minus">No effect</td>
+              <td class="plus">Sixteen steps, with an on-screen level</td>
+            </tr>
+            <tr>
+              <th scope="row">Quietest setting</th>
+              <td class="minus">The monitor’s minimum</td>
+              <td class="plus">Down to −40 dB in software</td>
+            </tr>
+            <tr>
+              <th scope="row">Each app</th>
+              <td class="minus">One level for everything</td>
+              <td class="plus">Silent to 150%, remembered</td>
+            </tr>
+            <tr>
+              <th scope="row">Bass</th>
+              <td class="minus">Thin</td>
+              <td class="plus">Ten bands and six presets</td>
+            </tr>
+            <tr>
+              <th scope="row">During calls</th>
+              <td class="minus">Nothing changes</td>
+              <td class="plus">Other audio drops until the call ends</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Set at the source.</h2>
+          <p>Decibar sends the command over the display cable, using DDC/CI. The speakers change at the source, with
+            nothing installed in your audio path.</p>
+          <span class="tag tag--free">Free</span>
+        </div>
+        <div class="captures">
+          <div class="panels">
+            <div class="panel-pad">
+              <div class="level-row"><label for="mon">External Monitor</label><output class="reading-s"
+                  id="monOut">40%</output></div>
+              <input class="meter" id="mon" type="range" min="0" max="100" value="40" style="--v:40%"
+                aria-label="Monitor volume">
+              <p class="note">Shortcuts and this slider set the monitor’s own volume.</p>
+            </div>
+          </div>
+          <figure class="shot"><img src="images/keyboard.png" width="1480" height="1184"
+              alt="Decibar Keyboard settings with volume shortcuts" loading="lazy">
+            <figcaption>Set your own shortcuts. The volume keys move software volume in sixteen steps, or quarter steps
+              with Option and Shift.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Every app gets its own slider.</h2>
+          <p>Set any app from silent to 150% on speakers. Decibar remembers each one.</p>
+          <span class="tag">Pro</span>
+        </div>
+        <div class="captures">
+          <div class="panels">
+            <div class="panel-pad">
+              <div class="app-row"><span>Music</span><input class="meter" type="range" min="0" max="150" value="60"
+                  style="--v:40%" aria-label="Music volume"><output class="measured">60%</output></div>
+              <div class="app-row"><span>Zoom</span><input class="meter" type="range" min="0" max="150" value="120"
+                  style="--v:80%" aria-label="Zoom volume"><output class="measured">120%</output></div>
+              <div class="app-row"><span>Safari</span><input class="meter" type="range" min="0" max="150" value="100"
+                  style="--v:66.7%" aria-label="Safari volume"><output class="measured">100%</output></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Monitor speakers are thin on bass.</h2>
+          <p>Ten bands, six presets and a custom curve, kept for each output device.</p>
+          <span class="tag">Pro</span>
+        </div>
+        <div class="captures">
+          <div class="panels">
+            <div class="panel-pad">
+              <fieldset class="seg" id="presets">
+                <legend>EQ preset</legend>
+                <input type="radio" name="eq" id="p-monitor" value="6,5,4,1,-2,-1,0,1,2,2" checked><label
+                  for="p-monitor">Monitor Speakers</label>
+                <input type="radio" name="eq" id="p-voice" value="-6,-4,-2,0,2,3,4,3,0,-2"><label
+                  for="p-voice">Voice</label>
+                <input type="radio" name="eq" id="p-bass" value="7,6,4,2,0,0,0,0,0,0"><label for="p-bass">Bass
+                  Boost</label>
+                <input type="radio" name="eq" id="p-treble" value="0,0,0,0,0,1,2,4,5,6"><label for="p-treble">Treble
+                  Boost</label>
+                <input type="radio" name="eq" id="p-night" value="-6,-4,-2,0,1,2,2,0,-2,-4"><label for="p-night">Late
+                  Night</label>
+                <input type="radio" name="eq" id="p-flat" value="0,0,0,0,0,0,0,0,0,0"><label for="p-flat">Flat</label>
+              </fieldset>
+              <div class="bars" id="bars" role="img" aria-label="Gain of each EQ band for the chosen preset"></div>
+            </div>
+          </div>
+          <div class="panels spec">
+            <div><strong>Boost</strong><span class="measured">+12 dB</span>
+              <p>With a limiter to stop clipping.</p>
+            </div>
+            <div><strong>Correction</strong>
+              <p>Import a parametric EQ for your headphones.</p>
+            </div>
+            <div><strong>Sound Stage</strong>
+              <p>Shapes stereo for headphones.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>It handles the routine for you.</h2>
+          <ul class="trail">
+            <li>
+              <h3>Calls lower everything else</h3>
+              <p>When a call app takes the mic, other audio drops. You choose the apps.</p>
+            </li>
+            <li>
+              <h3>The monitor becomes the output</h3>
+              <p>Turn this on and audio moves to a monitor’s speakers when you plug it in.</p>
+            </li>
+            <li>
+              <h3>Shortcuts can run it</h3>
+              <p>Set volumes and presets from the Shortcuts app.</p>
+            </li>
+          </ul>
+          <span class="tag">Pro</span>
+        </div>
+        <div class="captures">
+          <figure class="shot"><img src="images/automation.png" width="1480" height="1184"
+              alt="Decibar Automation settings for calls and devices" loading="lazy"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="price" id="price">
+      <div class="container">
+        <div>
+          <p class="amount">$9.99</p>
+          <h2>Once. No subscription.</h2>
+          <p>Every Pro feature is free for 14 days. After that, the free features keep working.</p>
+        </div>
+        <table class="tiers">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">Free</th>
+              <th scope="col">Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Monitor volume and mute</th>
+              <td class="yes">Yes</td>
+              <td class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Volume keys and on-screen level</th>
+              <td class="yes">Yes</td>
+              <td class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Software volume</th>
+              <td class="yes">Yes</td>
+              <td class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Per-app volume</th>
+              <td class="no">No</td>
+              <td class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Equalizer and boost</th>
+              <td class="no">No</td>
+              <td class="yes">Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Call ducking, output switching</th>
+              <td class="no">No</td>
+              <td class="yes">Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="container">
+        <div class="close-top">
+          <div>
+            <h2>Will it work with your monitor?</h2>
+            <p class="lead">The free download is the test: if the slider moves your monitor’s volume, Pro will work too.
+            </p>
+            <a class="btn btn--quiet"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+          </div>
+          <figure class="shot"><img src="images/onboarding.png" width="1000" height="1182"
+              alt="Decibar welcome window with a shortcut to try and permissions to allow" loading="lazy"></figure>
+        </div>
+        <div class="panels needs-grid">
+          <div><strong>macOS 26</strong>
+            <p>Or later.</p>
+          </div>
+          <div><strong>Apple silicon</strong>
+            <p>Intel Macs aren’t supported.</p>
+          </div>
+          <div><strong>Speakers</strong>
+            <p>Built into the monitor.</p>
+          </div>
+          <div><strong>DDC/CI</strong>
+            <p>Turned on in the monitor’s menu.</p>
+          </div>
+        </div>
+        <p class="note">Software volume and Pro audio add an audio driver, installed with your administrator password
+          the first time you turn one on. The volume keys also need Accessibility permission.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Questions about your monitor? Write to us.</p>
+        <a class="brand" href="#hero"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
+        <li><a href="help.html">Help</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="mailto:support@decibar.coypu.me">support@decibar.coypu.me</a></li>
+      </ul>
     </div>
-    <div class="control-cell">
-      <div class="control-head"><label for="level">Try software volume</label><span>Drag, or use the arrow keys</span></div>
-      <input class="meter" id="level" type="range" min="0" max="16" step="1" value="11" style="--v:68.75%" aria-label="Page volume, sixteen steps">
-      <div class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
-  </div>
-</div></section>
+  </footer>
 
-<section class="compare"><div class="container">
-  <h2>The same monitor, with and without.</h2>
-  <table class="diff">
-    <thead><tr><th scope="col">On HDMI or DisplayPort</th><th scope="col">macOS alone</th><th scope="col">With Decibar</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Volume keys</th><td class="minus">No effect</td><td class="plus">Sixteen steps, with an on-screen level</td></tr>
-      <tr><th scope="row">Quietest setting</th><td class="minus">The monitor’s minimum</td><td class="plus">Down to −40 dB in software</td></tr>
-      <tr><th scope="row">Each app</th><td class="minus">One level for everything</td><td class="plus">Silent to 150%, remembered</td></tr>
-      <tr><th scope="row">Bass</th><td class="minus">Thin</td><td class="plus">Ten bands and six presets</td></tr>
-      <tr><th scope="row">During calls</th><td class="minus">Nothing changes</td><td class="plus">Other audio drops until the call ends</td></tr>
-    </tbody>
-  </table>
-</div></section>
-
-<section class="chapter"><div class="container">
-  <div class="pin">
-    <h2>Set at the source.</h2>
-    <p>Decibar sends the command over the display cable, using DDC/CI. The speakers change at the source, with nothing installed in your audio path.</p>
-    <span class="tag tag--free">Free</span>
-  </div>
-  <div class="captures">
-    <div class="panels"><div class="panel-pad">
-      <div class="level-row"><label for="mon">External Monitor</label><output class="reading-s" id="monOut">40%</output></div>
-      <input class="meter" id="mon" type="range" min="0" max="100" value="40" style="--v:40%" aria-label="Monitor volume">
-      <p class="note">Shortcuts and this slider set the monitor’s own volume.</p>
-    </div></div>
-    <figure class="shot"><img src="images/keyboard.png" width="1480" height="1184" alt="Decibar Keyboard settings with volume shortcuts" loading="lazy"><figcaption>Set your own shortcuts. The volume keys move software volume in sixteen steps, or quarter steps with Option and Shift.</figcaption></figure>
-  </div>
-</div></section>
-
-<section class="chapter"><div class="container">
-  <div class="pin">
-    <h2>Every app gets its own slider.</h2>
-    <p>Set any app from silent to 150% on speakers. Decibar remembers each one.</p>
-    <span class="tag">Pro</span>
-  </div>
-  <div class="captures">
-    <div class="panels"><div class="panel-pad">
-      <div class="app-row"><span>Music</span><input class="meter" type="range" min="0" max="150" value="60" style="--v:40%" aria-label="Music volume"><output class="measured">60%</output></div>
-      <div class="app-row"><span>Zoom</span><input class="meter" type="range" min="0" max="150" value="120" style="--v:80%" aria-label="Zoom volume"><output class="measured">120%</output></div>
-      <div class="app-row"><span>Safari</span><input class="meter" type="range" min="0" max="150" value="100" style="--v:66.7%" aria-label="Safari volume"><output class="measured">100%</output></div>
-    </div></div>
-  </div>
-</div></section>
-
-<section class="chapter"><div class="container">
-  <div class="pin">
-    <h2>Monitor speakers are thin on bass.</h2>
-    <p>Ten bands, six presets and a custom curve, kept for each output device.</p>
-    <span class="tag">Pro</span>
-  </div>
-  <div class="captures">
-    <div class="panels"><div class="panel-pad">
-      <fieldset class="seg" id="presets"><legend>EQ preset</legend>
-        <input type="radio" name="eq" id="p-monitor" value="6,5,4,1,-2,-1,0,1,2,2" checked><label for="p-monitor">Monitor Speakers</label>
-        <input type="radio" name="eq" id="p-voice" value="-6,-4,-2,0,2,3,4,3,0,-2"><label for="p-voice">Voice</label>
-        <input type="radio" name="eq" id="p-bass" value="7,6,4,2,0,0,0,0,0,0"><label for="p-bass">Bass Boost</label>
-        <input type="radio" name="eq" id="p-treble" value="0,0,0,0,0,1,2,4,5,6"><label for="p-treble">Treble Boost</label>
-        <input type="radio" name="eq" id="p-night" value="-6,-4,-2,0,1,2,2,0,-2,-4"><label for="p-night">Late Night</label>
-        <input type="radio" name="eq" id="p-flat" value="0,0,0,0,0,0,0,0,0,0"><label for="p-flat">Flat</label>
-      </fieldset>
-      <div class="bars" id="bars" role="img" aria-label="Gain of each EQ band for the chosen preset"></div>
-    </div></div>
-    <div class="panels spec">
-      <div><strong>Boost</strong><span class="measured">+12 dB</span><p>With a limiter to stop clipping.</p></div>
-      <div><strong>Correction</strong><p>Import a parametric EQ for your headphones.</p></div>
-      <div><strong>Sound Stage</strong><p>Shapes stereo for headphones.</p></div>
-    </div>
-  </div>
-</div></section>
-
-<section class="chapter"><div class="container">
-  <div class="pin">
-    <h2>It handles the routine for you.</h2>
-    <ul class="trail">
-      <li><h3>Calls lower everything else</h3><p>When a call app takes the mic, other audio drops. You choose the apps.</p></li>
-      <li><h3>The monitor becomes the output</h3><p>Turn this on and audio moves to a monitor’s speakers when you plug it in.</p></li>
-      <li><h3>Shortcuts can run it</h3><p>Set volumes and presets from the Shortcuts app.</p></li>
-    </ul>
-    <span class="tag">Pro</span>
-  </div>
-  <div class="captures">
-    <figure class="shot"><img src="images/automation.png" width="1480" height="1184" alt="Decibar Automation settings for calls and devices" loading="lazy"></figure>
-  </div>
-</div></section>
-
-<section class="price" id="price"><div class="container">
-  <div>
-    <p class="amount">$9.99</p>
-    <h2>Once. No subscription.</h2>
-    <p>Every Pro feature is free for 14 days. After that, the free features keep working.</p>
-  </div>
-  <table class="tiers">
-    <thead><tr><th scope="col">Feature</th><th scope="col">Free</th><th scope="col">Pro</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Monitor volume and mute</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-      <tr><th scope="row">Volume keys and on-screen level</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-      <tr><th scope="row">Software volume</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-      <tr><th scope="row">Per-app volume</th><td class="no">No</td><td class="yes">Yes</td></tr>
-      <tr><th scope="row">Equalizer and boost</th><td class="no">No</td><td class="yes">Yes</td></tr>
-      <tr><th scope="row">Call ducking, output switching</th><td class="no">No</td><td class="yes">Yes</td></tr>
-    </tbody>
-  </table>
-</div></section>
-
-<section class="close"><div class="container">
-  <div class="close-top">
-    <div>
-      <h2>Will it work with your monitor?</h2>
-      <p class="lead">The free download is the test: if the slider moves your monitor’s volume, Pro will work too.</p>
-      <a class="btn btn--quiet" href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
-    </div>
-    <figure class="shot"><img src="images/onboarding.png" width="1000" height="1182" alt="Decibar welcome window with a shortcut to try and permissions to allow" loading="lazy"></figure>
-  </div>
-  <div class="panels needs-grid">
-    <div><strong>macOS 26</strong><p>Or later.</p></div>
-    <div><strong>Apple silicon</strong><p>Intel Macs aren’t supported.</p></div>
-    <div><strong>Speakers</strong><p>Built into the monitor.</p></div>
-    <div><strong>DDC/CI</strong><p>Turned on in the monitor’s menu.</p></div>
-  </div>
-  <p class="note">Software volume and Pro audio add an audio driver, installed with your administrator password the first time you turn one on. The volume keys also need Accessibility permission.</p>
-</div></section>
-</main>
-
-<footer class="letter"><div class="container">
-  <div>
-    <p class="letter-note">Questions about your monitor? Write to us.</p>
-    <a class="brand" href="#hero"><svg aria-hidden="true"><use href="#logo"/></svg>Decibar</a>
-  </div>
-  <ul>
-    <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
-    <li><a href="help.html">Help</a></li>
-    <li><a href="privacy.html">Privacy</a></li>
-    <li><a href="terms.html">Terms</a></li>
-    <li><a href="mailto:support@decibar.app">support@decibar.app</a></li>
-  </ul>
-</div></footer>
-
-<script>
-const fill = (input) => input.style.setProperty('--v', (input.value - input.min) / (input.max - input.min) * 100 + '%');
-const level = document.getElementById('level'), text = document.getElementById('levelText'), percent = document.getElementById('levelPercent');
-// The app's own curve: linear in decibels, from 0 dB at 100% to -40 dB, and silence at 0.
-const paint = () => {
-  const share = level.value / 16, decibels = (share - 1) * 40;
-  text.textContent = share === 0 ? 'Muted' : decibels.toFixed(1).replace('-0.0', '0.0').replace('-', '−') + ' dB';
-  percent.textContent = Math.round(share * 100) + '%';
-  fill(level);
-};
-level.addEventListener('input', paint);
-const mon = document.getElementById('mon');
-mon.addEventListener('input', () => { document.getElementById('monOut').textContent = mon.value + '%'; fill(mon); });
-document.querySelectorAll('.app-row output').forEach((o) => { const r = o.previousElementSibling; r.addEventListener('input', () => { o.textContent = r.value + '%'; fill(r); }); });
-const labels = ['32', '64', '125', '250', '500', '1k', '2k', '4k', '8k', '16k'], bars = document.getElementById('bars');
-bars.innerHTML = labels.map((l) => `<div><div class="bar"><i></i></div><div class="bar-label">${l}</div></div>`).join('');
-const draw = () => { document.querySelector('[name=eq]:checked').value.split(',').forEach((g, i) => { const b = bars.children[i].querySelector('i'); b.style.setProperty('--g', Math.abs(g)); b.style.setProperty('--g-sign', g < 0 ? 1 : -1); }); };
-document.getElementById('presets').addEventListener('change', draw); draw();
-</script>
+  <script>
+    const fill = (input) => input.style.setProperty('--v', (input.value - input.min) / (input.max - input.min) * 100 + '%');
+    const level = document.getElementById('level'), text = document.getElementById('levelText'), percent = document.getElementById('levelPercent');
+    // The app's own curve: linear in decibels, from 0 dB at 100% to -40 dB, and silence at 0.
+    const paint = () => {
+      const share = level.value / 16, decibels = (share - 1) * 40;
+      text.textContent = share === 0 ? 'Muted' : decibels.toFixed(1).replace('-0.0', '0.0').replace('-', '−') + ' dB';
+      percent.textContent = Math.round(share * 100) + '%';
+      fill(level);
+    };
+    level.addEventListener('input', paint);
+    const mon = document.getElementById('mon');
+    mon.addEventListener('input', () => { document.getElementById('monOut').textContent = mon.value + '%'; fill(mon); });
+    document.querySelectorAll('.app-row output').forEach((o) => { const r = o.previousElementSibling; r.addEventListener('input', () => { o.textContent = r.value + '%'; fill(r); }); });
+    const labels = ['32', '64', '125', '250', '500', '1k', '2k', '4k', '8k', '16k'], bars = document.getElementById('bars');
+    bars.innerHTML = labels.map((l) => `<div><div class="bar"><i></i></div><div class="bar-label">${l}</div></div>`).join('');
+    const draw = () => { document.querySelector('[name=eq]:checked').value.split(',').forEach((g, i) => { const b = bars.children[i].querySelector('i'); b.style.setProperty('--g', Math.abs(g)); b.style.setProperty('--g-sign', g < 0 ? 1 : -1); }); };
+    document.getElementById('presets').addEventListener('change', draw); draw();
+  </script>
 </body>
+
 </html>

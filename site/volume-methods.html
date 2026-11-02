@@ -1,657 +1,1383 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Decibar 볼륨 처리 방식</title>
-<meta name="description" content="Mac에서 모니터 스피커 볼륨을 조절하는 13가지 방법과 Decibar가 DDC/CI와 가상 오디오 드라이버를 함께 쓰는 이유를 직접 움직여 보며 이해합니다.">
-<link rel="icon" href="images/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="legacy/styles.css">
-<style>
-:root { --font-body: "Golos Text", "Apple SD Gothic Neo", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif; --font-display: var(--font-body); --font-mono: ui-monospace, "SF Mono", Menlo, monospace; --radius-stage: 14px; }
-body { word-break: keep-all; }
-.doc-nav { padding-block: var(--space-lg); }
-.doc-head { padding-block: var(--space-xl) var(--space-xl); }
-.doc-head h1 { font-size: clamp(2.5rem, 6.5vw, 5.5rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.03em; max-width: 13em; }
-.doc-head p { margin-top: var(--space-lg); font-size: var(--text-lead); max-width: 40em; }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decibar 볼륨 처리 방식</title>
+  <meta name="description"
+    content="Mac에서 모니터 스피커 볼륨을 조절하는 13가지 방법과 Decibar가 DDC/CI와 가상 오디오 드라이버를 함께 쓰는 이유를 직접 움직여 보며 이해합니다.">
+  <link rel="icon" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="legacy/styles.css">
+  <style>
+    :root {
+      --font-body: "Golos Text", "Apple SD Gothic Neo", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+      --font-display: var(--font-body);
+      --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+      --radius-stage: 14px;
+    }
 
-.chapters { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--color-paper); border-block: 1px solid var(--color-rule); }
-.chapters .container { display: flex; gap: var(--space-lg); overflow-x: auto; scrollbar-width: none; }
-.chapters a { flex: none; padding-block: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-.chapters a.active, .chapters a:hover { color: var(--color-ink); }
-.chapters a.active { border-bottom-color: var(--color-ink); }
+    body {
+      word-break: keep-all;
+    }
 
-.section { padding-block: var(--space-3xl); border-top: 1px solid var(--color-rule); }
-.section:first-of-type { border-top: 0; }
-h2 { font-size: var(--text-section); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
-h3 { font-size: var(--text-xl); font-weight: 500; line-height: 1.3; }
-.prose p, .prose > ul { margin-top: var(--space-md); max-width: 40em; color: var(--color-ink-2); }
-.prose h3 { margin-top: var(--space-2xl); }
-.prose h3:first-child { margin-top: 0; }
-.caption { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); max-width: 44em; }
+    .doc-nav {
+      padding-block: var(--space-lg);
+    }
 
-.stage { margin-top: var(--space-xl); padding: var(--space-lg); border: 1px solid var(--color-rule); border-radius: var(--radius-stage); }
-.stage.dark { --color-ink-2: var(--color-paper); --color-rule: var(--color-rule-dark); --color-muted: var(--color-muted-dark); --color-focus: var(--color-paper); border-color: var(--color-ink); background: var(--color-ink); color: var(--color-paper); }
-.stage-title { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); flex-wrap: wrap; font-weight: 500; }
-.stage-title small { font-size: var(--text-sm); font-weight: 400; color: var(--color-muted); }
-.btn-s { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-card); background: transparent; color: inherit; cursor: pointer; transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out); }
-.btn-s:hover { background: color-mix(in oklab, currentColor 8%, transparent); }
-.btn-s:active { transform: translateY(1px); }
-.btn-s[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
-.dark .btn-s[aria-pressed="true"] { background: var(--color-paper); border-color: var(--color-paper); color: var(--color-ink); }
-.btn-row { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-md); }
-input[type="range"].meter::-webkit-slider-runnable-track { background: currentColor; }
-input[type="range"].meter::-moz-range-track { background: currentColor; }
-input[type="range"].meter::-webkit-slider-thumb { background: currentColor; }
-input[type="range"].meter::-moz-range-thumb { background: currentColor; }
-input[type="range"].meter { color: inherit; }
+    .doc-head {
+      padding-block: var(--space-xl) var(--space-xl);
+    }
 
-/* Signal simulator */
-#wave { display: block; width: 100%; height: 200px; margin-top: var(--space-md); }
-.chain { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2xs); }
-.node { padding: var(--space-xs) var(--space-2xs); border: 1px solid var(--color-rule); border-radius: var(--radius-card); text-align: center; font-size: var(--text-sm); line-height: 1.3; transition: opacity var(--dur-long) var(--ease-out), border-color var(--dur-long) var(--ease-out), background-color var(--dur-long) var(--ease-out), color var(--dur-long) var(--ease-out); }
-.node small { display: block; font-size: var(--text-xs); color: var(--color-muted); }
-.node.hot { background: var(--color-paper); border-color: var(--color-paper); color: var(--color-ink); }
-.node.hot small { color: var(--color-ink); }
-.node.off { opacity: 0.45; border-style: dashed; }
-.wire { position: relative; height: 26px; margin-top: var(--space-xs); }
-.wire::before { content: ""; position: absolute; left: 10%; right: 30%; top: 50%; border-top: 1px dashed var(--color-rule); }
-.pulse { position: absolute; left: 10%; top: 50%; padding: 0 var(--space-xs); border-radius: var(--radius-card); background: var(--color-paper); color: var(--color-ink); font-family: var(--font-mono); font-size: var(--text-xs); white-space: nowrap; opacity: 0; transform: translate(-50%, -50%); }
-.sim-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm) var(--space-xl); margin-top: var(--space-sm); }
-.ctl label { display: flex; justify-content: space-between; font-size: var(--text-sm); }
-.ctl output { font-variant-numeric: tabular-nums; }
-.sim-status { min-height: 3.2em; margin-top: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--color-rule); font-size: var(--text-sm); }
+    .doc-head h1 {
+      font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 13em;
+    }
 
-/* Volume key comparison */
-.compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-md); }
-.device { padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-card); }
-.device h4 { margin: 0; font-size: var(--text-md); font-weight: 500; }
-.device > p { margin-top: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
-.hud { display: flex; align-items: center; gap: var(--space-sm); height: 56px; margin-top: var(--space-md); padding-inline: var(--space-sm); border-radius: 12px; background: var(--color-paper-2); }
-.hud svg { flex: none; width: 24px; height: 24px; }
-.segs { flex: 1; display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 2px; height: 8px; }
-.segs i { background: var(--color-rule); }
-.segs i.on { background: var(--color-ink); }
-.segs.blocked i { background: repeating-linear-gradient(135deg, var(--color-rule) 0 2px, transparent 2px 4px); }
-.shake { animation: shake 320ms var(--ease-out); }
-@keyframes shake { 25% { transform: translateX(-4px); } 60% { transform: translateX(3px); } }
+    .doc-head p {
+      margin-top: var(--space-lg);
+      font-size: var(--text-lead);
+      max-width: 40em;
+    }
 
-/* Methods */
-.map { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--space-xl); border: 1px solid var(--color-rule); }
-.map > div { padding: var(--space-md); border-left: 1px solid var(--color-rule); }
-.map > div:first-child { border-left: 0; }
-.map b { display: block; font-weight: 500; }
-.map span { font-size: var(--text-sm); color: var(--color-muted); }
-.filters { margin-top: var(--space-xl); }
-.method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-md); }
-.method { padding: var(--space-md) var(--space-lg) var(--space-lg); border: 1px solid var(--color-rule); border-radius: var(--radius-card); }
-.method.wide, .method.used { grid-column: 1 / -1; }
-.method.used { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); --color-ink-2: var(--color-muted-dark); --color-muted: var(--color-muted-dark); }
-.method.used p b { color: var(--color-paper); }
-.method-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); font-variant-numeric: tabular-nums; }
-.method h4 { margin: var(--space-2xs) 0 0; font-size: var(--text-lg); font-weight: 500; }
-.method p { margin-top: var(--space-xs); color: var(--color-ink-2); }
-.method p b { font-weight: 600; color: var(--color-ink); }
+    .chapters {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      background: var(--color-paper);
+      border-block: 1px solid var(--color-rule);
+    }
 
-/* DDC packet */
-.bytes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2xs); margin-top: var(--space-md); }
-.byte { padding: var(--space-sm) var(--space-2xs); border: 1px solid var(--color-rule); border-radius: var(--radius-card); text-align: center; }
-.byte code { display: block; font-family: var(--font-mono); font-size: var(--text-lg); }
-.byte span { display: block; margin-top: var(--space-2xs); font-size: var(--text-xs); line-height: 1.3; color: var(--color-muted); }
-.byte.live { border-color: currentColor; }
-.bytes.send .byte { animation: send 360ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 60ms); }
-@keyframes send { from { background: var(--color-ink); color: var(--color-paper); } }
+    .chapters .container {
+      display: flex;
+      gap: var(--space-lg);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
 
-/* Gain bar */
-.bar16 { position: relative; height: 96px; margin-top: var(--space-md); border: 1px solid var(--color-ink); overflow: hidden; }
-.bar16-fill { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--level, 0.5)); transition: transform var(--dur-micro) var(--ease-out); }
-.bar16 .ticks { position: absolute; inset: 0; z-index: 1; height: auto; color: var(--color-paper); mix-blend-mode: difference; }
-.bar16 input { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
-.bar16:has(input:focus-visible) { outline: 2px solid var(--color-focus); outline-offset: 2px; }
-.readout { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-xl); align-items: baseline; margin-top: var(--space-md); font-variant-numeric: tabular-nums; }
-.readout strong { font-size: var(--text-2xl); font-weight: 400; }
-.readout span { color: var(--color-muted); }
-.check { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 44px; font-size: var(--text-sm); }
+    .chapters a {
+      flex: none;
+      padding-block: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
 
-/* Audio paths */
-.route { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); align-items: center; margin: var(--space-md) 0 0; padding: 0; list-style: none; }
-.route li { position: relative; padding: var(--space-xs) var(--space-sm); border: 1px solid var(--color-rule); border-radius: var(--radius-card); font-size: var(--text-sm); transition: opacity var(--dur-short) var(--ease-out); }
-.route li + li::before { content: "→"; position: absolute; left: calc(var(--space-lg) * -1); width: var(--space-lg); top: 50%; transform: translateY(-50%); text-align: center; color: var(--color-muted); }
-.route li.on { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
-.dark .route li.on { background: var(--color-paper); border-color: var(--color-paper); color: var(--color-ink); }
-.route li.down { text-decoration: line-through; opacity: 0.6; border-style: dashed; }
+    .chapters a.active,
+    .chapters a:hover {
+      color: var(--color-ink);
+    }
 
-/* Tap versus driver */
-.topo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--space-md); align-items: center; margin-top: var(--space-md); }
-.topo-col { display: grid; gap: var(--space-2xs); }
-.topo-col > div { padding: var(--space-2xs) var(--space-xs); border: 1px solid var(--color-rule); border-radius: var(--radius-card); font-size: var(--text-sm); text-align: center; }
-.topo-col > .on { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
-.stepper { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); }
-.stepper .btn-s { min-width: 44px; padding: 0; }
-.tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-rule); font-size: var(--text-sm); }
-.tally span { display: block; color: var(--color-muted); }
+    .chapters a.active {
+      border-bottom-color: var(--color-ink);
+    }
 
-/* Costs */
-.costs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl) var(--gap-columns); margin: var(--space-xl) 0 0; }
-.costs dt { padding-top: var(--space-sm); border-top: 1px solid var(--color-ink); font-weight: 500; }
-.costs dd { margin: var(--space-xs) 0 0; color: var(--color-ink-2); }
+    .section {
+      padding-block: var(--space-3xl);
+      border-top: 1px solid var(--color-rule);
+    }
 
-@media (max-width: 60rem) { .costs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 40rem) {
-  .stage { padding: var(--space-md); }
-  .compare, .method-grid, .map, .sim-controls, .costs { grid-template-columns: minmax(0, 1fr); }
-  .map > div { border-left: 0; border-top: 1px solid var(--color-rule); }
-  .map > div:first-child { border-top: 0; }
-  .node { padding-inline: 0; font-size: var(--text-xs); }
-  .bytes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .topo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .topo-col:last-child { grid-column: 1 / -1; }
-  .tally { grid-template-columns: minmax(0, 1fr); }
-}
-@media (prefers-reduced-motion: reduce) { .bytes.send .byte, .shake { animation: none; } }
-</style>
+    .section:first-of-type {
+      border-top: 0;
+    }
+
+    h2 {
+      font-size: var(--text-section);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: var(--text-xl);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .prose p,
+    .prose>ul {
+      margin-top: var(--space-md);
+      max-width: 40em;
+      color: var(--color-ink-2);
+    }
+
+    .prose h3 {
+      margin-top: var(--space-2xl);
+    }
+
+    .prose h3:first-child {
+      margin-top: 0;
+    }
+
+    .caption {
+      margin-top: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      max-width: 44em;
+    }
+
+    .stage {
+      margin-top: var(--space-xl);
+      padding: var(--space-lg);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-stage);
+    }
+
+    .stage.dark {
+      --color-ink-2: var(--color-paper);
+      --color-rule: var(--color-rule-dark);
+      --color-muted: var(--color-muted-dark);
+      --color-focus: var(--color-paper);
+      border-color: var(--color-ink);
+      background: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .stage-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      font-weight: 500;
+    }
+
+    .stage-title small {
+      font-size: var(--text-sm);
+      font-weight: 400;
+      color: var(--color-muted);
+    }
+
+    .btn-s {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out);
+    }
+
+    .btn-s:hover {
+      background: color-mix(in oklab, currentColor 8%, transparent);
+    }
+
+    .btn-s:active {
+      transform: translateY(1px);
+    }
+
+    .btn-s[aria-pressed="true"] {
+      background: var(--color-ink);
+      border-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .dark .btn-s[aria-pressed="true"] {
+      background: var(--color-paper);
+      border-color: var(--color-paper);
+      color: var(--color-ink);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: var(--space-md);
+    }
+
+    input[type="range"].meter::-webkit-slider-runnable-track {
+      background: currentColor;
+    }
+
+    input[type="range"].meter::-moz-range-track {
+      background: currentColor;
+    }
+
+    input[type="range"].meter::-webkit-slider-thumb {
+      background: currentColor;
+    }
+
+    input[type="range"].meter::-moz-range-thumb {
+      background: currentColor;
+    }
+
+    input[type="range"].meter {
+      color: inherit;
+    }
+
+    /* Signal simulator */
+    #wave {
+      display: block;
+      width: 100%;
+      height: 200px;
+      margin-top: var(--space-md);
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-2xs);
+    }
+
+    .node {
+      padding: var(--space-xs) var(--space-2xs);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+      text-align: center;
+      font-size: var(--text-sm);
+      line-height: 1.3;
+      transition: opacity var(--dur-long) var(--ease-out), border-color var(--dur-long) var(--ease-out), background-color var(--dur-long) var(--ease-out), color var(--dur-long) var(--ease-out);
+    }
+
+    .node small {
+      display: block;
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+    }
+
+    .node.hot {
+      background: var(--color-paper);
+      border-color: var(--color-paper);
+      color: var(--color-ink);
+    }
+
+    .node.hot small {
+      color: var(--color-ink);
+    }
+
+    .node.off {
+      opacity: 0.45;
+      border-style: dashed;
+    }
+
+    .wire {
+      position: relative;
+      height: 26px;
+      margin-top: var(--space-xs);
+    }
+
+    .wire::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 30%;
+      top: 50%;
+      border-top: 1px dashed var(--color-rule);
+    }
+
+    .pulse {
+      position: absolute;
+      left: 10%;
+      top: 50%;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-card);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    .sim-controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm) var(--space-xl);
+      margin-top: var(--space-sm);
+    }
+
+    .ctl label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-sm);
+    }
+
+    .ctl output {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sim-status {
+      min-height: 3.2em;
+      margin-top: var(--space-md);
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--color-rule);
+      font-size: var(--text-sm);
+    }
+
+    /* Volume key comparison */
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .device {
+      padding: var(--space-md);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+    }
+
+    .device h4 {
+      margin: 0;
+      font-size: var(--text-md);
+      font-weight: 500;
+    }
+
+    .device>p {
+      margin-top: var(--space-2xs);
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+    }
+
+    .hud {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      height: 56px;
+      margin-top: var(--space-md);
+      padding-inline: var(--space-sm);
+      border-radius: 12px;
+      background: var(--color-paper-2);
+    }
+
+    .hud svg {
+      flex: none;
+      width: 24px;
+      height: 24px;
+    }
+
+    .segs {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(16, minmax(0, 1fr));
+      gap: 2px;
+      height: 8px;
+    }
+
+    .segs i {
+      background: var(--color-rule);
+    }
+
+    .segs i.on {
+      background: var(--color-ink);
+    }
+
+    .segs.blocked i {
+      background: repeating-linear-gradient(135deg, var(--color-rule) 0 2px, transparent 2px 4px);
+    }
+
+    .shake {
+      animation: shake 320ms var(--ease-out);
+    }
+
+    @keyframes shake {
+      25% {
+        transform: translateX(-4px);
+      }
+
+      60% {
+        transform: translateX(3px);
+      }
+    }
+
+    /* Methods */
+    .map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: var(--space-xl);
+      border: 1px solid var(--color-rule);
+    }
+
+    .map>div {
+      padding: var(--space-md);
+      border-left: 1px solid var(--color-rule);
+    }
+
+    .map>div:first-child {
+      border-left: 0;
+    }
+
+    .map b {
+      display: block;
+      font-weight: 500;
+    }
+
+    .map span {
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+    }
+
+    .filters {
+      margin-top: var(--space-xl);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .method {
+      padding: var(--space-md) var(--space-lg) var(--space-lg);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+    }
+
+    .method.wide,
+    .method.used {
+      grid-column: 1 / -1;
+    }
+
+    .method.used {
+      background: var(--color-ink);
+      border-color: var(--color-ink);
+      color: var(--color-paper);
+      --color-ink-2: var(--color-muted-dark);
+      --color-muted: var(--color-muted-dark);
+    }
+
+    .method.used p b {
+      color: var(--color-paper);
+    }
+
+    .method-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .method h4 {
+      margin: var(--space-2xs) 0 0;
+      font-size: var(--text-lg);
+      font-weight: 500;
+    }
+
+    .method p {
+      margin-top: var(--space-xs);
+      color: var(--color-ink-2);
+    }
+
+    .method p b {
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    /* DDC packet */
+    .bytes {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--space-2xs);
+      margin-top: var(--space-md);
+    }
+
+    .byte {
+      padding: var(--space-sm) var(--space-2xs);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+      text-align: center;
+    }
+
+    .byte code {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--text-lg);
+    }
+
+    .byte span {
+      display: block;
+      margin-top: var(--space-2xs);
+      font-size: var(--text-xs);
+      line-height: 1.3;
+      color: var(--color-muted);
+    }
+
+    .byte.live {
+      border-color: currentColor;
+    }
+
+    .bytes.send .byte {
+      animation: send 360ms var(--ease-out) backwards;
+      animation-delay: calc(var(--i) * 60ms);
+    }
+
+    @keyframes send {
+      from {
+        background: var(--color-ink);
+        color: var(--color-paper);
+      }
+    }
+
+    /* Gain bar */
+    .bar16 {
+      position: relative;
+      height: 96px;
+      margin-top: var(--space-md);
+      border: 1px solid var(--color-ink);
+      overflow: hidden;
+    }
+
+    .bar16-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-ink);
+      transform-origin: left;
+      transform: scaleX(var(--level, 0.5));
+      transition: transform var(--dur-micro) var(--ease-out);
+    }
+
+    .bar16 .ticks {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      height: auto;
+      color: var(--color-paper);
+      mix-blend-mode: difference;
+    }
+
+    .bar16 input {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: ew-resize;
+    }
+
+    .bar16:has(input:focus-visible) {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .readout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs) var(--space-xl);
+      align-items: baseline;
+      margin-top: var(--space-md);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .readout strong {
+      font-size: var(--text-2xl);
+      font-weight: 400;
+    }
+
+    .readout span {
+      color: var(--color-muted);
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      font-size: var(--text-sm);
+    }
+
+    /* Audio paths */
+    .route {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs) var(--space-lg);
+      align-items: center;
+      margin: var(--space-md) 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .route li {
+      position: relative;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+      font-size: var(--text-sm);
+      transition: opacity var(--dur-short) var(--ease-out);
+    }
+
+    .route li+li::before {
+      content: "→";
+      position: absolute;
+      left: calc(var(--space-lg) * -1);
+      width: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+      color: var(--color-muted);
+    }
+
+    .route li.on {
+      background: var(--color-ink);
+      border-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .dark .route li.on {
+      background: var(--color-paper);
+      border-color: var(--color-paper);
+      color: var(--color-ink);
+    }
+
+    .route li.down {
+      text-decoration: line-through;
+      opacity: 0.6;
+      border-style: dashed;
+    }
+
+    /* Tap versus driver */
+    .topo {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-md);
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+
+    .topo-col {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    .topo-col>div {
+      padding: var(--space-2xs) var(--space-xs);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-card);
+      font-size: var(--text-sm);
+      text-align: center;
+    }
+
+    .topo-col>.on {
+      background: var(--color-ink);
+      border-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: var(--text-sm);
+    }
+
+    .stepper .btn-s {
+      min-width: 44px;
+      padding: 0;
+    }
+
+    .tally {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-rule);
+      font-size: var(--text-sm);
+    }
+
+    .tally span {
+      display: block;
+      color: var(--color-muted);
+    }
+
+    /* Costs */
+    .costs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-xl) var(--gap-columns);
+      margin: var(--space-xl) 0 0;
+    }
+
+    .costs dt {
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--color-ink);
+      font-weight: 500;
+    }
+
+    .costs dd {
+      margin: var(--space-xs) 0 0;
+      color: var(--color-ink-2);
+    }
+
+    @media (max-width: 60rem) {
+      .costs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 40rem) {
+      .stage {
+        padding: var(--space-md);
+      }
+
+      .compare,
+      .method-grid,
+      .map,
+      .sim-controls,
+      .costs {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .map>div {
+        border-left: 0;
+        border-top: 1px solid var(--color-rule);
+      }
+
+      .map>div:first-child {
+        border-top: 0;
+      }
+
+      .node {
+        padding-inline: 0;
+        font-size: var(--text-xs);
+      }
+
+      .bytes {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .topo {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .topo-col:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .tally {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .bytes.send .byte,
+      .shake {
+        animation: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="240 300 500 424"><path fill="currentColor" d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z"/><g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round"><path d="M572 442a92 92 0 0 1 0 140"/><path d="M634 358a196 196 0 0 1 0 308"/></g></symbol></svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
 
-<div class="container nav doc-nav">
-  <a class="brand" href="index.html"><svg aria-hidden="true"><use href="#logo"/></svg>Decibar</a>
-  <a class="nav-link" href="help.html">Help</a>
-</div>
-
-<header class="container doc-head">
-  <h1>Decibar가 모니터 볼륨을 다루는 방법</h1>
-  <p>Mac에 연결한 모니터의 스피커 볼륨을 조절하는 방법은 여러 가지입니다. 가능한 방법을 나열하고, Decibar가 어떤 방법을 왜 골랐는지 설명합니다.</p>
-</header>
-
-<nav class="chapters" aria-label="목차"><div class="container">
-  <a href="#summary">요약</a><a href="#problem">원인</a><a href="#methods">방법 13가지</a><a href="#actual">실제 동작</a><a href="#why">선택 이유</a><a href="#costs">대가</a>
-</div></nav>
-
-<main>
-<section class="section" id="summary"><div class="container prose">
-  <h2>소리는 두 곳에서 줄어듭니다</h2>
-  <p>Decibar는 볼륨을 두 층으로 나누어 처리합니다. 1층은 모니터 자체의 볼륨으로, 디스플레이 케이블로 DDC/CI 명령을 보내 바꿉니다. 2층은 소프트웨어 볼륨으로, 가상 오디오 드라이버로 소리가 나가기 전에 줄입니다.</p>
-  <div class="stage dark">
-    <div class="stage-title"><span>직접 움직여 보세요</span><small>왼쪽에서 오른쪽으로 흐르는 소리</small></div>
-    <canvas id="wave" role="img" aria-label="두 볼륨 슬라이더에 따라 줄어드는 소리 파형"></canvas>
-    <div class="chain">
-      <div class="node">앱<small>원본</small></div>
-      <div class="node hot" id="nodeDecibar">Decibar<small id="nodeDecibarNote">2층</small></div>
-      <div class="node">케이블<small>HDMI, DP</small></div>
-      <div class="node hot">앰프<small>1층</small></div>
-      <div class="node">스피커<small>최종</small></div>
-    </div>
-    <div class="wire" aria-hidden="true"><span class="pulse" id="pulse"></span></div>
-    <div class="sim-controls">
-      <div class="ctl"><label for="sim-sw">2층 소프트웨어 볼륨 <output id="sim-sw-out">100</output></label><input class="meter" id="sim-sw" type="range" min="0" max="100" value="100"></div>
-      <div class="ctl"><label for="sim-mon">1층 모니터 볼륨 (DDC/CI) <output id="sim-mon-out">40</output></label><input class="meter" id="sim-mon" type="range" min="0" max="100" value="40"></div>
-    </div>
-    <div class="btn-row" role="group" aria-label="예시 상황">
-      <button class="btn-s" data-sw="100" data-mon="40" aria-pressed="true">평소</button>
-      <button class="btn-s" data-sw="100" data-mon="1" aria-pressed="false">모니터 최솟값도 클 때</button>
-      <button class="btn-s" data-sw="31.25" data-mon="1" aria-pressed="false">밤에 조용히</button>
-    </div>
-    <p class="sim-status" id="simStatus" aria-live="polite"></p>
+  <div class="container nav doc-nav">
+    <a class="brand" href="index.html"><svg aria-hidden="true">
+        <use href="#logo" />
+      </svg>Decibar</a>
+    <a class="nav-link" href="help.html">Help</a>
   </div>
-  <p class="caption">개념을 보여 주는 그림입니다. 소리의 크기는 귀로 느끼는 정도에 가깝게 그렸고, 모니터 볼륨이 실제로 줄어드는 폭은 모니터마다 다릅니다.</p>
-  <p>1층은 모니터의 앰프가 내는 실제 음량을 바꾸지만, 모니터가 지원해야 하고 최솟값 아래로는 내려가지 못합니다. 2층은 어떤 모니터에서든 동작하고 앱별 볼륨과 EQ까지 가능하지만, 소리의 경로에 끼어들어야 합니다. 한쪽만으로는 부족해서 둘을 함께 씁니다.</p>
-</div></section>
 
-<section class="section" id="problem"><div class="container prose">
-  <h2>왜 이 문제가 생기는가</h2>
-  <p>Mac의 내장 스피커나 USB 오디오 장치는 macOS가 직접 조절할 수 있는 볼륨 컨트롤을 제공합니다. HDMI와 DisplayPort 오디오는 다릅니다. 디지털 신호를 모니터에 그대로 보낼 뿐이고, macOS에 보이는 볼륨 컨트롤이 없습니다. 그래서 시스템 설정의 소리 슬라이더가 비활성화되고, 키보드 볼륨 키를 누르면 “조절할 수 없음” 표시가 뜹니다.</p>
-  <div class="stage">
-    <div class="stage-title"><span>같은 볼륨 키, 다른 결과</span><small>Decibar가 없을 때의 macOS</small></div>
-    <div class="btn-row">
-      <button class="btn-s" id="keyDown" aria-label="볼륨 낮추기">볼륨 낮추기</button>
-      <button class="btn-s" id="keyUp" aria-label="볼륨 높이기">볼륨 높이기</button>
+  <header class="container doc-head">
+    <h1>Decibar가 모니터 볼륨을 다루는 방법</h1>
+    <p>Mac에 연결한 모니터의 스피커 볼륨을 조절하는 방법은 여러 가지입니다. 가능한 방법을 나열하고, Decibar가 어떤 방법을 왜 골랐는지 설명합니다.</p>
+  </header>
+
+  <nav class="chapters" aria-label="목차">
+    <div class="container">
+      <a href="#summary">요약</a><a href="#problem">원인</a><a href="#methods">방법 13가지</a><a href="#actual">실제 동작</a><a
+        href="#why">선택 이유</a><a href="#costs">대가</a>
     </div>
-    <div class="compare">
-      <div class="device">
-        <h4>내장 스피커, USB 오디오</h4>
-        <p>macOS가 장치의 볼륨을 바꿉니다.</p>
-        <div class="hud"><svg viewBox="240 300 500 424" aria-hidden="true"><use href="#logo"/></svg><div class="segs" id="segsOk"></div></div>
+  </nav>
+
+  <main>
+    <section class="section" id="summary">
+      <div class="container prose">
+        <h2>소리는 두 곳에서 줄어듭니다</h2>
+        <p>Decibar는 볼륨을 두 층으로 나누어 처리합니다. 1층은 모니터 자체의 볼륨으로, 디스플레이 케이블로 DDC/CI 명령을 보내 바꿉니다. 2층은 소프트웨어 볼륨으로, 가상 오디오 드라이버로
+          소리가 나가기 전에 줄입니다.</p>
+        <div class="stage dark">
+          <div class="stage-title"><span>직접 움직여 보세요</span><small>왼쪽에서 오른쪽으로 흐르는 소리</small></div>
+          <canvas id="wave" role="img" aria-label="두 볼륨 슬라이더에 따라 줄어드는 소리 파형"></canvas>
+          <div class="chain">
+            <div class="node">앱<small>원본</small></div>
+            <div class="node hot" id="nodeDecibar">Decibar<small id="nodeDecibarNote">2층</small></div>
+            <div class="node">케이블<small>HDMI, DP</small></div>
+            <div class="node hot">앰프<small>1층</small></div>
+            <div class="node">스피커<small>최종</small></div>
+          </div>
+          <div class="wire" aria-hidden="true"><span class="pulse" id="pulse"></span></div>
+          <div class="sim-controls">
+            <div class="ctl"><label for="sim-sw">2층 소프트웨어 볼륨 <output id="sim-sw-out">100</output></label><input
+                class="meter" id="sim-sw" type="range" min="0" max="100" value="100"></div>
+            <div class="ctl"><label for="sim-mon">1층 모니터 볼륨 (DDC/CI) <output id="sim-mon-out">40</output></label><input
+                class="meter" id="sim-mon" type="range" min="0" max="100" value="40"></div>
+          </div>
+          <div class="btn-row" role="group" aria-label="예시 상황">
+            <button class="btn-s" data-sw="100" data-mon="40" aria-pressed="true">평소</button>
+            <button class="btn-s" data-sw="100" data-mon="1" aria-pressed="false">모니터 최솟값도 클 때</button>
+            <button class="btn-s" data-sw="31.25" data-mon="1" aria-pressed="false">밤에 조용히</button>
+          </div>
+          <p class="sim-status" id="simStatus" aria-live="polite"></p>
+        </div>
+        <p class="caption">개념을 보여 주는 그림입니다. 소리의 크기는 귀로 느끼는 정도에 가깝게 그렸고, 모니터 볼륨이 실제로 줄어드는 폭은 모니터마다 다릅니다.</p>
+        <p>1층은 모니터의 앰프가 내는 실제 음량을 바꾸지만, 모니터가 지원해야 하고 최솟값 아래로는 내려가지 못합니다. 2층은 어떤 모니터에서든 동작하고 앱별 볼륨과 EQ까지 가능하지만, 소리의 경로에
+          끼어들어야 합니다. 한쪽만으로는 부족해서 둘을 함께 씁니다.</p>
       </div>
-      <div class="device">
-        <h4>HDMI, DisplayPort 모니터</h4>
-        <p>macOS가 바꿀 볼륨 컨트롤이 없습니다.</p>
-        <div class="hud" id="hudBlocked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.8 5.8l12.4 12.4"/></svg><div class="segs blocked" id="segsBlocked"></div></div>
+    </section>
+
+    <section class="section" id="problem">
+      <div class="container prose">
+        <h2>왜 이 문제가 생기는가</h2>
+        <p>Mac의 내장 스피커나 USB 오디오 장치는 macOS가 직접 조절할 수 있는 볼륨 컨트롤을 제공합니다. HDMI와 DisplayPort 오디오는 다릅니다. 디지털 신호를 모니터에 그대로 보낼
+          뿐이고, macOS에 보이는 볼륨 컨트롤이 없습니다. 그래서 시스템 설정의 소리 슬라이더가 비활성화되고, 키보드 볼륨 키를 누르면 “조절할 수 없음” 표시가 뜹니다.</p>
+        <div class="stage">
+          <div class="stage-title"><span>같은 볼륨 키, 다른 결과</span><small>Decibar가 없을 때의 macOS</small></div>
+          <div class="btn-row">
+            <button class="btn-s" id="keyDown" aria-label="볼륨 낮추기">볼륨 낮추기</button>
+            <button class="btn-s" id="keyUp" aria-label="볼륨 높이기">볼륨 높이기</button>
+          </div>
+          <div class="compare">
+            <div class="device">
+              <h4>내장 스피커, USB 오디오</h4>
+              <p>macOS가 장치의 볼륨을 바꿉니다.</p>
+              <div class="hud"><svg viewBox="240 300 500 424" aria-hidden="true">
+                  <use href="#logo" />
+                </svg>
+                <div class="segs" id="segsOk"></div>
+              </div>
+            </div>
+            <div class="device">
+              <h4>HDMI, DisplayPort 모니터</h4>
+              <p>macOS가 바꿀 볼륨 컨트롤이 없습니다.</p>
+              <div class="hud" id="hudBlocked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M5.8 5.8l12.4 12.4" />
+                </svg>
+                <div class="segs blocked" id="segsBlocked"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>실제 음량은 모니터 안의 앰프가 정합니다. 따라서 선택지는 세 가지입니다.</p>
+        <div class="map">
+          <div><b>가. 모니터에게 명령한다</b><span>앰프 음량을 바꾸라고 알립니다. 1~5번</span></div>
+          <div><b>나. 소리를 미리 줄인다</b><span>모니터로 보내는 소리 자체를 줄입니다. 6~12번</span></div>
+          <div><b>다. 모니터 스피커를 안 쓴다</b><span>다른 출력으로 바꿉니다. 13번</span></div>
+        </div>
       </div>
-    </div>
-  </div>
-  <p>실제 음량은 모니터 안의 앰프가 정합니다. 따라서 선택지는 세 가지입니다.</p>
-  <div class="map">
-    <div><b>가. 모니터에게 명령한다</b><span>앰프 음량을 바꾸라고 알립니다. 1~5번</span></div>
-    <div><b>나. 소리를 미리 줄인다</b><span>모니터로 보내는 소리 자체를 줄입니다. 6~12번</span></div>
-    <div><b>다. 모니터 스피커를 안 쓴다</b><span>다른 출력으로 바꿉니다. 13번</span></div>
-  </div>
-</div></section>
+    </section>
 
-<section class="section" id="methods"><div class="container">
-  <h2>방법 13가지</h2>
-  <div class="btn-row filters" role="group" aria-label="방법 거르기">
-    <button class="btn-s" data-filter="all" aria-pressed="true">전체</button>
-    <button class="btn-s" data-filter="used" aria-pressed="false">Decibar 사용</button>
-    <button class="btn-s" data-filter="a" aria-pressed="false">가. 명령</button>
-    <button class="btn-s" data-filter="b" aria-pressed="false">나. 미리 줄임</button>
-    <button class="btn-s" data-filter="c" aria-pressed="false">다. 안 씀</button>
-  </div>
-  <div class="method-grid">
-    <article class="method used" data-group="a used"><div class="method-top"><span>1</span><span>Decibar 사용</span></div>
-      <h4>DDC/CI, IOAVService 경유</h4>
-      <p>DDC/CI는 디스플레이 케이블 안의 I2C 통신선으로 컴퓨터와 모니터가 대화하는 표준입니다. MCCS 규격의 VCP 코드로 설정을 읽고 씁니다. 스피커 볼륨은 0x62, 음소거는 0x8D입니다. Apple 실리콘 Mac에는 이 통신을 위한 공개 API가 없어서 비공개 API인 IOAVService를 씁니다.</p>
-      <p><b>장점</b> 모니터의 앰프 음량이 직접 바뀝니다. 소리 경로에 아무것도 끼어들지 않아 음질, 지연, 다채널 오디오에 영향이 없고, 권한도 드라이버도 필요 없습니다.</p>
-      <p><b>단점</b> 모니터가 DDC/CI를 지원해야 합니다. 도크나 어댑터가 신호를 막기도 합니다. 모니터의 최솟값 아래로는 내려가지 않습니다. 비공개 API라서 macOS 업데이트로 바뀔 수 있고, 명령 한 번마다 수십 밀리초가 걸립니다.</p>
-    </article>
-    <article class="method" data-group="a"><div class="method-top"><span>2</span><span>Apple 실리콘 불가</span></div>
-      <h4>DDC/CI, IOFramebuffer I2C 경유</h4>
-      <p>Intel Mac에서 쓰던 방식입니다. 프로토콜은 1번과 같고 접근 경로만 다릅니다.</p>
-      <p><b>판단</b> Apple 실리콘에서는 동작하지 않습니다. Decibar는 Apple 실리콘 전용이라 쓰지 않습니다.</p>
-    </article>
-    <article class="method" data-group="a"><div class="method-top"><span>3</span><span>범용 아님</span></div>
-      <h4>모니터 제조사 앱</h4>
-      <p>일부 제조사가 자사 모니터용 제어 앱을 제공합니다.</p>
-      <p><b>판단</b> 제조사와 모델마다 다르고 Mac용이 없는 경우가 많습니다. 범용 해법이 아닙니다.</p>
-    </article>
-    <article class="method" data-group="a"><div class="method-top"><span>4</span><span>Mac 미지원</span></div>
-      <h4>HDMI-CEC</h4>
-      <p>TV와 AV 기기가 HDMI로 서로를 제어하는 규격입니다. 볼륨 명령도 있습니다.</p>
-      <p><b>판단</b> Mac은 기본적으로 CEC를 지원하지 않고, PC 모니터도 대부분 지원하지 않습니다.</p>
-    </article>
-    <article class="method" data-group="a"><div class="method-top"><span>5</span><span>항상 가능, 번거로움</span></div>
-      <h4>모니터 버튼 또는 리모컨</h4>
-      <p>화면 메뉴에서 직접 바꾸는 방법입니다. 언제나 가능한 기준선입니다.</p>
-      <p><b>판단</b> 동작은 확실하지만 메뉴를 몇 단계 들어가야 합니다. Decibar가 없애려는 불편입니다.</p>
-    </article>
-    <article class="method" data-group="b"><div class="method-top"><span>6</span><span>사용 불가</span></div>
-      <h4>macOS 시스템 볼륨</h4>
-      <p>가장 먼저 떠오르는 방법이지만, 앞서 설명한 대로 HDMI와 DisplayPort 출력에는 macOS가 조절할 볼륨 컨트롤이 없습니다.</p>
-      <p><b>판단</b> 사용할 수 없습니다.</p>
-    </article>
-    <article class="method" data-group="b"><div class="method-top"><span>7</span><span>앱 하나만</span></div>
-      <h4>앱 안의 볼륨 슬라이더</h4>
-      <p>음악 앱, 브라우저 플레이어, 화상회의 앱은 자체 볼륨이 있습니다.</p>
-      <p><b>판단</b> 그 앱에서는 동작하지만 시스템 전체에 적용되지 않고, 키보드로 조절할 수도 없습니다.</p>
-    </article>
-    <article class="method" data-group="b"><div class="method-top"><span>8</span><span>볼륨 없음</span></div>
-      <h4>Audio MIDI 설정의 집합 기기, 다중 출력 기기</h4>
-      <p>macOS에 기본으로 있는 기능으로 여러 장치를 하나로 묶습니다.</p>
-      <p><b>판단</b> 묶는 기능일 뿐, 묶은 장치에 전체 볼륨이 생기지 않습니다.</p>
-    </article>
-    <article class="method" data-group="b"><div class="method-top"><span>9</span><span>줄일 수 없음</span></div>
-      <h4>ScreenCaptureKit 오디오 캡처</h4>
-      <p>화면 녹화용 API로 시스템 오디오를 받아올 수 있습니다.</p>
-      <p><b>판단</b> 복사본을 받을 뿐 원래 소리는 그대로 나갑니다. 줄이는 용도로 쓸 수 없고, 화면 녹화 권한도 필요합니다.</p>
-    </article>
-    <article class="method wide" data-group="b"><div class="method-top"><span>10</span><span>이전 방식</span></div>
-      <h4>Core Audio 프로세스 탭</h4>
-      <p>macOS 14.2에 추가된 API입니다. 앱의 소리를 가로채 원래 출력을 음소거하고, 가공한 소리를 비공개 집합 기기로 내보냅니다.</p>
-      <p><b>장점</b> 드라이버 설치가 없습니다. 앱이 죽으면 음소거가 풀려 소리가 저절로 돌아옵니다.</p>
-      <p><b>단점</b> 오디오 캡처 권한이 필요합니다. 소리를 낮추려는 앱이 사용자에게는 녹음 권한을 요청하는 앱으로 보입니다. 앱별로 볼륨을 다루려면 앱마다 탭을 따로 만들어야 합니다.</p>
-    </article>
-    <article class="method used" data-group="b used"><div class="method-top"><span>11</span><span>Decibar 사용</span></div>
-      <h4>가상 오디오 드라이버, AudioServerPlugIn</h4>
-      <p>macOS가 공식 지원하는 드라이버 형식으로, 시스템에 가상 출력 장치를 추가합니다. 앱은 이 장치로 소리를 내고, 드라이버가 처리한 뒤 실제 장치로 내보냅니다.</p>
-      <p><b>장점</b> 시스템 전체의 소리를 한곳에서 다룹니다. 앱마다 게인을 따로 적용할 수 있습니다. 입력 장치를 노출하지 않으면 오디오 캡처 권한이 필요 없습니다.</p>
-      <p><b>단점</b> 설치에 관리자 암호가 필요하고, 설치 중 소리가 잠시 끊깁니다. 드라이버가 출력일 때 소리를 전달하는 앱이 죽으면 무음이 될 수 있어 복구 장치가 필요합니다. 경유하는 만큼 지연이 조금 늘고, Decibar의 경우 스테레오로 처리됩니다.</p>
-    </article>
-    <article class="method" data-group="b"><div class="method-top"><span>12</span><span>조건이 과함</span></div>
-      <h4>커널 확장 또는 시스템 오디오 프로세스 주입</h4>
-      <p>예전에는 커널 확장으로 오디오를 처리하거나 시스템 오디오 프로세스에 코드를 넣기도 했습니다.</p>
-      <p><b>판단</b> 커널 확장은 Apple이 폐기 수순을 밟고 있고, Apple 실리콘에서는 보안 수준을 낮춰야 설치됩니다. 볼륨 앱이 요구할 조건이 아닙니다.</p>
-    </article>
-    <article class="method" data-group="c"><div class="method-top"><span>13</span><span>장비 필요</span></div>
-      <h4>볼륨 조절이 되는 장치로 출력 바꾸기</h4>
-      <p>USB DAC, 블루투스, USB 스피커를 쓰면 macOS 볼륨이 그대로 동작합니다. 모니터의 3.5mm 출력에 볼륨 노브가 있는 스피커를 연결해도 됩니다.</p>
-      <p><b>판단</b> 좋은 해결책이지만 장비를 사야 합니다. Decibar는 모니터 스피커를 그대로 쓰려는 사람을 위한 앱입니다.</p>
-    </article>
-  </div>
-</div></section>
-
-<section class="section" id="actual"><div class="container prose">
-  <h2>Decibar가 실제로 하는 일</h2>
-
-  <h3 style="margin-top:var(--space-xl)">모니터 볼륨 (1번, 무료)</h3>
-  <p>앱 메뉴의 슬라이더와 기본 단축키 Control-Option-Command-위/아래 화살표, 음소거 Control-Option-Command-M은 DDC/CI로 모니터의 볼륨을 바꿉니다.</p>
-  <div class="stage">
-    <div class="stage-title"><span>케이블로 나가는 실제 명령</span><small>최댓값이 100인 모니터 기준</small></div>
-    <div class="ctl" style="margin-top:var(--space-md)"><label for="ddc">모니터 볼륨 <output id="ddcOut">40</output></label><input class="meter" id="ddc" type="range" min="0" max="100" value="40"></div>
-    <div class="bytes" id="bytes"></div>
-  </div>
-  <p class="caption">Set VCP 명령 6바이트입니다. 슬라이더를 움직일 때마다 Decibar가 만드는 값과 같은 방식으로 계산합니다. 마지막 바이트는 받는 쪽이 전송 오류를 확인하는 체크섬입니다.</p>
-  <p>I2C 통신은 모니터가 여러 대여도 한 번에 하나만 이루어집니다. 슬라이더를 끌 때는 가장 최근 값만 남기고 앞선 쓰기가 끝난 뒤에 보내므로 명령이 밀리지 않습니다. 쓰기가 실패하면 최대 3번까지 시도하고, 끝나면 모니터가 실제로 적용한 값을 다시 읽어 화면에 보여 줍니다.</p>
-  <p>일부 모니터는 음소거 명령을 받아들이는 척만 합니다. 예를 들어 Dell S2725QC가 그렇습니다. 이런 모델은 볼륨을 0으로 내렸다가 이전 값으로 복원하는 방식으로 음소거를 대신합니다. 이 목록은 앱을 업데이트하지 않아도 사이트에서 갱신할 수 있습니다.</p>
-
-  <h3>소프트웨어 볼륨 (11번, 무료)</h3>
-  <p>설정에서 켜면 모니터의 최솟값보다 더 작게 줄일 수 있습니다. 출력이 HDMI나 DisplayPort일 때만 동작합니다. 손쉬운 사용 권한을 주면 키보드 볼륨 키가 이 소프트웨어 볼륨을 조절하고 16단계로 움직이며, Option-Shift를 누르면 4분의 1 단계로 움직입니다.</p>
-  <div class="stage">
-    <div class="stage-title"><span>16단계 볼륨 키</span><small>막대를 끌거나 키를 눌러 보세요</small></div>
-    <div class="bar16" id="bar16">
-      <div class="bar16-fill"></div>
-      <div class="ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <input id="gain" type="range" min="0" max="100" step="1.5625" value="50" aria-label="소프트웨어 볼륨">
-    </div>
-    <div class="readout"><strong id="gainLevel">50</strong><span id="gainDb">-20.0dB</span><span id="gainAmp">원래 신호 세기의 10.0%</span></div>
-    <div class="btn-row">
-      <button class="btn-s" id="gainDown">볼륨 낮추기</button>
-      <button class="btn-s" id="gainUp">볼륨 높이기</button>
-      <label class="check"><input type="checkbox" id="fine"> Option-Shift</label>
-    </div>
-  </div>
-  <p>슬라이더는 데시벨 기준으로 일정합니다. 100은 0dB(그대로), 50은 -20dB, 1은 약 -40dB이고 0은 무음입니다. 사람의 귀는 소리를 로그로 느끼기 때문에 이렇게 해야 각 단계가 비슷한 크기로 들립니다.</p>
-  <p>볼륨 키는 모니터의 하드웨어 볼륨을 건드리지 않습니다. 모니터 볼륨으로 상한을 정해 두고, 일상적인 조절은 볼륨 키로 그 아래에서 하는 구조입니다.</p>
-
-  <h3>Pro 기능 (11번)</h3>
-  <p>앱별 볼륨(0~150%), 10밴드 EQ, 최대 12dB 부스트, 통화 중 다른 소리 낮추기는 모두 같은 드라이버 경로를 씁니다. Pro에서는 HDMI, DisplayPort가 아닌 출력에서도 동작합니다. 소리가 최대치를 넘을 수 있을 때는 리미터가 클리핑을 막습니다.</p>
-
-  <h3>소리의 경로</h3>
-  <div class="stage">
-    <div class="stage-title"><span>Decibar가 끼어드는 때와 빠지는 때</span></div>
-    <div class="btn-row" role="group" aria-label="경로 선택">
-      <button class="btn-s" data-route="idle" aria-pressed="true">평소</button>
-      <button class="btn-s" data-route="busy" aria-pressed="false">처리가 필요할 때</button>
-    </div>
-    <ol class="route" id="route"></ol>
-    <p class="caption" id="routeNote"></p>
-  </div>
-  <p>드라이버는 앱별 게인을 적용해 섞은 소리를 공유 파일의 링 버퍼에 쓰고, Decibar 앱이 이를 읽어 실제 장치로 재생합니다.</p>
-  <p>소프트웨어 볼륨이 100%이고 EQ, 부스트, 앱별 볼륨, 통화 낮추기가 모두 꺼져 있으면 Decibar는 경로에서 완전히 빠집니다. 이때는 드라이버가 설치되어 있어도 놀고 있을 뿐입니다.</p>
-</div></section>
-
-<section class="section" id="why"><div class="container prose">
-  <h2>왜 이렇게 골랐는가</h2>
-
-  <h3 style="margin-top:var(--space-xl)">왜 모니터 볼륨은 DDC/CI인가</h3>
-  <p>모니터의 앰프를 직접 조절하는 일반적인 방법은 DDC/CI뿐입니다. 소리를 줄이는 다른 방법은 전부 앰프에 들어가기 전의 신호를 줄이는 것이라, 앰프 자체의 잡음은 줄지 않습니다. 소리 경로에 끼어들지 않으므로 아무것도 설치하지 않아도 동작합니다.</p>
-  <p>비공개 API를 쓴다는 위험은 대안이 없어서 받아들였습니다. 대신 이 API를 다루는 코드를 파일 하나로 모으고, 실행 중에 찾아 불러오도록 했습니다. macOS가 바뀌어도 고칠 곳이 한 곳이고, API가 사라져도 앱이 죽지 않습니다.</p>
-
-  <h3>왜 DDC/CI만으로 끝내지 않았는가</h3>
-  <p>모니터 스피커는 최솟값조차 큰 경우가 있습니다. 밤에 조용히 듣고 싶어도 DDC/CI로는 1단계와 음소거 사이로 내려갈 수 없습니다. 앱별 볼륨과 EQ도 신호를 건드려야만 가능합니다. DDC/CI를 지원하지 않는 모니터에서 소리를 줄일 방법도 소프트웨어뿐입니다.</p>
-
-  <h3>왜 볼륨 키는 소프트웨어 볼륨을 조절하는가</h3>
-  <p>볼륨 키는 키를 누르고 있으면 빠르게 반복되는 입력입니다. 소프트웨어 볼륨은 오디오 버퍼 단위로 부드럽게 바뀌고 모니터와 통신하지 않습니다. 또 모니터 볼륨을 상한으로 고정해 두면 볼륨 키 16단계 전체가 쓸모 있는 범위 안에 놓입니다. 모니터 볼륨은 단축키와 슬라이더로 따로 바꿀 수 있습니다.</p>
-
-  <h3>왜 프로세스 탭에서 드라이버로 옮겼는가</h3>
-  <p>Decibar는 처음에 10번 프로세스 탭으로 만들어졌습니다. 드라이버 설치가 필요 없어서 쉬운 길이었지만 오디오 캡처 권한을 요구해야 했습니다. 볼륨 앱이 소리를 녹음할 권한을 달라고 하는 것은 사용자에게 설명하기 어렵습니다.</p>
-  <div class="stage">
-    <div class="stage-title"><span>앱이 늘어나면 어떻게 달라지나</span></div>
-    <div class="btn-row" style="justify-content:space-between">
-      <div class="btn-row" role="group" aria-label="방식 선택" style="margin-top:0">
-        <button class="btn-s" data-topo="tap" aria-pressed="false">프로세스 탭</button>
-        <button class="btn-s" data-topo="driver" aria-pressed="true">드라이버</button>
+    <section class="section" id="methods">
+      <div class="container">
+        <h2>방법 13가지</h2>
+        <div class="btn-row filters" role="group" aria-label="방법 거르기">
+          <button class="btn-s" data-filter="all" aria-pressed="true">전체</button>
+          <button class="btn-s" data-filter="used" aria-pressed="false">Decibar 사용</button>
+          <button class="btn-s" data-filter="a" aria-pressed="false">가. 명령</button>
+          <button class="btn-s" data-filter="b" aria-pressed="false">나. 미리 줄임</button>
+          <button class="btn-s" data-filter="c" aria-pressed="false">다. 안 씀</button>
+        </div>
+        <div class="method-grid">
+          <article class="method used" data-group="a used">
+            <div class="method-top"><span>1</span><span>Decibar 사용</span></div>
+            <h4>DDC/CI, IOAVService 경유</h4>
+            <p>DDC/CI는 디스플레이 케이블 안의 I2C 통신선으로 컴퓨터와 모니터가 대화하는 표준입니다. MCCS 규격의 VCP 코드로 설정을 읽고 씁니다. 스피커 볼륨은 0x62, 음소거는
+              0x8D입니다. Apple 실리콘 Mac에는 이 통신을 위한 공개 API가 없어서 비공개 API인 IOAVService를 씁니다.</p>
+            <p><b>장점</b> 모니터의 앰프 음량이 직접 바뀝니다. 소리 경로에 아무것도 끼어들지 않아 음질, 지연, 다채널 오디오에 영향이 없고, 권한도 드라이버도 필요 없습니다.</p>
+            <p><b>단점</b> 모니터가 DDC/CI를 지원해야 합니다. 도크나 어댑터가 신호를 막기도 합니다. 모니터의 최솟값 아래로는 내려가지 않습니다. 비공개 API라서 macOS 업데이트로 바뀔
+              수 있고, 명령 한 번마다 수십 밀리초가 걸립니다.</p>
+          </article>
+          <article class="method" data-group="a">
+            <div class="method-top"><span>2</span><span>Apple 실리콘 불가</span></div>
+            <h4>DDC/CI, IOFramebuffer I2C 경유</h4>
+            <p>Intel Mac에서 쓰던 방식입니다. 프로토콜은 1번과 같고 접근 경로만 다릅니다.</p>
+            <p><b>판단</b> Apple 실리콘에서는 동작하지 않습니다. Decibar는 Apple 실리콘 전용이라 쓰지 않습니다.</p>
+          </article>
+          <article class="method" data-group="a">
+            <div class="method-top"><span>3</span><span>범용 아님</span></div>
+            <h4>모니터 제조사 앱</h4>
+            <p>일부 제조사가 자사 모니터용 제어 앱을 제공합니다.</p>
+            <p><b>판단</b> 제조사와 모델마다 다르고 Mac용이 없는 경우가 많습니다. 범용 해법이 아닙니다.</p>
+          </article>
+          <article class="method" data-group="a">
+            <div class="method-top"><span>4</span><span>Mac 미지원</span></div>
+            <h4>HDMI-CEC</h4>
+            <p>TV와 AV 기기가 HDMI로 서로를 제어하는 규격입니다. 볼륨 명령도 있습니다.</p>
+            <p><b>판단</b> Mac은 기본적으로 CEC를 지원하지 않고, PC 모니터도 대부분 지원하지 않습니다.</p>
+          </article>
+          <article class="method" data-group="a">
+            <div class="method-top"><span>5</span><span>항상 가능, 번거로움</span></div>
+            <h4>모니터 버튼 또는 리모컨</h4>
+            <p>화면 메뉴에서 직접 바꾸는 방법입니다. 언제나 가능한 기준선입니다.</p>
+            <p><b>판단</b> 동작은 확실하지만 메뉴를 몇 단계 들어가야 합니다. Decibar가 없애려는 불편입니다.</p>
+          </article>
+          <article class="method" data-group="b">
+            <div class="method-top"><span>6</span><span>사용 불가</span></div>
+            <h4>macOS 시스템 볼륨</h4>
+            <p>가장 먼저 떠오르는 방법이지만, 앞서 설명한 대로 HDMI와 DisplayPort 출력에는 macOS가 조절할 볼륨 컨트롤이 없습니다.</p>
+            <p><b>판단</b> 사용할 수 없습니다.</p>
+          </article>
+          <article class="method" data-group="b">
+            <div class="method-top"><span>7</span><span>앱 하나만</span></div>
+            <h4>앱 안의 볼륨 슬라이더</h4>
+            <p>음악 앱, 브라우저 플레이어, 화상회의 앱은 자체 볼륨이 있습니다.</p>
+            <p><b>판단</b> 그 앱에서는 동작하지만 시스템 전체에 적용되지 않고, 키보드로 조절할 수도 없습니다.</p>
+          </article>
+          <article class="method" data-group="b">
+            <div class="method-top"><span>8</span><span>볼륨 없음</span></div>
+            <h4>Audio MIDI 설정의 집합 기기, 다중 출력 기기</h4>
+            <p>macOS에 기본으로 있는 기능으로 여러 장치를 하나로 묶습니다.</p>
+            <p><b>판단</b> 묶는 기능일 뿐, 묶은 장치에 전체 볼륨이 생기지 않습니다.</p>
+          </article>
+          <article class="method" data-group="b">
+            <div class="method-top"><span>9</span><span>줄일 수 없음</span></div>
+            <h4>ScreenCaptureKit 오디오 캡처</h4>
+            <p>화면 녹화용 API로 시스템 오디오를 받아올 수 있습니다.</p>
+            <p><b>판단</b> 복사본을 받을 뿐 원래 소리는 그대로 나갑니다. 줄이는 용도로 쓸 수 없고, 화면 녹화 권한도 필요합니다.</p>
+          </article>
+          <article class="method wide" data-group="b">
+            <div class="method-top"><span>10</span><span>이전 방식</span></div>
+            <h4>Core Audio 프로세스 탭</h4>
+            <p>macOS 14.2에 추가된 API입니다. 앱의 소리를 가로채 원래 출력을 음소거하고, 가공한 소리를 비공개 집합 기기로 내보냅니다.</p>
+            <p><b>장점</b> 드라이버 설치가 없습니다. 앱이 죽으면 음소거가 풀려 소리가 저절로 돌아옵니다.</p>
+            <p><b>단점</b> 오디오 캡처 권한이 필요합니다. 소리를 낮추려는 앱이 사용자에게는 녹음 권한을 요청하는 앱으로 보입니다. 앱별로 볼륨을 다루려면 앱마다 탭을 따로 만들어야 합니다.</p>
+          </article>
+          <article class="method used" data-group="b used">
+            <div class="method-top"><span>11</span><span>Decibar 사용</span></div>
+            <h4>가상 오디오 드라이버, AudioServerPlugIn</h4>
+            <p>macOS가 공식 지원하는 드라이버 형식으로, 시스템에 가상 출력 장치를 추가합니다. 앱은 이 장치로 소리를 내고, 드라이버가 처리한 뒤 실제 장치로 내보냅니다.</p>
+            <p><b>장점</b> 시스템 전체의 소리를 한곳에서 다룹니다. 앱마다 게인을 따로 적용할 수 있습니다. 입력 장치를 노출하지 않으면 오디오 캡처 권한이 필요 없습니다.</p>
+            <p><b>단점</b> 설치에 관리자 암호가 필요하고, 설치 중 소리가 잠시 끊깁니다. 드라이버가 출력일 때 소리를 전달하는 앱이 죽으면 무음이 될 수 있어 복구 장치가 필요합니다. 경유하는
+              만큼 지연이 조금 늘고, Decibar의 경우 스테레오로 처리됩니다.</p>
+          </article>
+          <article class="method" data-group="b">
+            <div class="method-top"><span>12</span><span>조건이 과함</span></div>
+            <h4>커널 확장 또는 시스템 오디오 프로세스 주입</h4>
+            <p>예전에는 커널 확장으로 오디오를 처리하거나 시스템 오디오 프로세스에 코드를 넣기도 했습니다.</p>
+            <p><b>판단</b> 커널 확장은 Apple이 폐기 수순을 밟고 있고, Apple 실리콘에서는 보안 수준을 낮춰야 설치됩니다. 볼륨 앱이 요구할 조건이 아닙니다.</p>
+          </article>
+          <article class="method" data-group="c">
+            <div class="method-top"><span>13</span><span>장비 필요</span></div>
+            <h4>볼륨 조절이 되는 장치로 출력 바꾸기</h4>
+            <p>USB DAC, 블루투스, USB 스피커를 쓰면 macOS 볼륨이 그대로 동작합니다. 모니터의 3.5mm 출력에 볼륨 노브가 있는 스피커를 연결해도 됩니다.</p>
+            <p><b>판단</b> 좋은 해결책이지만 장비를 사야 합니다. Decibar는 모니터 스피커를 그대로 쓰려는 사람을 위한 앱입니다.</p>
+          </article>
+        </div>
       </div>
-      <div class="stepper"><span>볼륨을 따로 둔 앱</span><button class="btn-s" id="appsLess" aria-label="앱 줄이기">−</button><output id="appsOut">3</output><button class="btn-s" id="appsMore" aria-label="앱 늘리기">+</button></div>
+    </section>
+
+    <section class="section" id="actual">
+      <div class="container prose">
+        <h2>Decibar가 실제로 하는 일</h2>
+
+        <h3 style="margin-top:var(--space-xl)">모니터 볼륨 (1번, 무료)</h3>
+        <p>앱 메뉴의 슬라이더와 기본 단축키 Control-Option-Command-위/아래 화살표, 음소거 Control-Option-Command-M은 DDC/CI로 모니터의 볼륨을 바꿉니다.</p>
+        <div class="stage">
+          <div class="stage-title"><span>케이블로 나가는 실제 명령</span><small>최댓값이 100인 모니터 기준</small></div>
+          <div class="ctl" style="margin-top:var(--space-md)"><label for="ddc">모니터 볼륨 <output
+                id="ddcOut">40</output></label><input class="meter" id="ddc" type="range" min="0" max="100" value="40">
+          </div>
+          <div class="bytes" id="bytes"></div>
+        </div>
+        <p class="caption">Set VCP 명령 6바이트입니다. 슬라이더를 움직일 때마다 Decibar가 만드는 값과 같은 방식으로 계산합니다. 마지막 바이트는 받는 쪽이 전송 오류를 확인하는
+          체크섬입니다.</p>
+        <p>I2C 통신은 모니터가 여러 대여도 한 번에 하나만 이루어집니다. 슬라이더를 끌 때는 가장 최근 값만 남기고 앞선 쓰기가 끝난 뒤에 보내므로 명령이 밀리지 않습니다. 쓰기가 실패하면 최대 3번까지
+          시도하고, 끝나면 모니터가 실제로 적용한 값을 다시 읽어 화면에 보여 줍니다.</p>
+        <p>일부 모니터는 음소거 명령을 받아들이는 척만 합니다. 예를 들어 Dell S2725QC가 그렇습니다. 이런 모델은 볼륨을 0으로 내렸다가 이전 값으로 복원하는 방식으로 음소거를 대신합니다. 이
+          목록은 앱을 업데이트하지 않아도 사이트에서 갱신할 수 있습니다.</p>
+
+        <h3>소프트웨어 볼륨 (11번, 무료)</h3>
+        <p>설정에서 켜면 모니터의 최솟값보다 더 작게 줄일 수 있습니다. 출력이 HDMI나 DisplayPort일 때만 동작합니다. 손쉬운 사용 권한을 주면 키보드 볼륨 키가 이 소프트웨어 볼륨을 조절하고
+          16단계로 움직이며, Option-Shift를 누르면 4분의 1 단계로 움직입니다.</p>
+        <div class="stage">
+          <div class="stage-title"><span>16단계 볼륨 키</span><small>막대를 끌거나 키를 눌러 보세요</small></div>
+          <div class="bar16" id="bar16">
+            <div class="bar16-fill"></div>
+            <div class="ticks" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <input id="gain" type="range" min="0" max="100" step="1.5625" value="50" aria-label="소프트웨어 볼륨">
+          </div>
+          <div class="readout"><strong id="gainLevel">50</strong><span id="gainDb">-20.0dB</span><span id="gainAmp">원래
+              신호 세기의 10.0%</span></div>
+          <div class="btn-row">
+            <button class="btn-s" id="gainDown">볼륨 낮추기</button>
+            <button class="btn-s" id="gainUp">볼륨 높이기</button>
+            <label class="check"><input type="checkbox" id="fine"> Option-Shift</label>
+          </div>
+        </div>
+        <p>슬라이더는 데시벨 기준으로 일정합니다. 100은 0dB(그대로), 50은 -20dB, 1은 약 -40dB이고 0은 무음입니다. 사람의 귀는 소리를 로그로 느끼기 때문에 이렇게 해야 각 단계가
+          비슷한 크기로 들립니다.</p>
+        <p>볼륨 키는 모니터의 하드웨어 볼륨을 건드리지 않습니다. 모니터 볼륨으로 상한을 정해 두고, 일상적인 조절은 볼륨 키로 그 아래에서 하는 구조입니다.</p>
+
+        <h3>Pro 기능 (11번)</h3>
+        <p>앱별 볼륨(0~150%), 10밴드 EQ, 최대 12dB 부스트, 통화 중 다른 소리 낮추기는 모두 같은 드라이버 경로를 씁니다. Pro에서는 HDMI, DisplayPort가 아닌 출력에서도
+          동작합니다. 소리가 최대치를 넘을 수 있을 때는 리미터가 클리핑을 막습니다.</p>
+
+        <h3>소리의 경로</h3>
+        <div class="stage">
+          <div class="stage-title"><span>Decibar가 끼어드는 때와 빠지는 때</span></div>
+          <div class="btn-row" role="group" aria-label="경로 선택">
+            <button class="btn-s" data-route="idle" aria-pressed="true">평소</button>
+            <button class="btn-s" data-route="busy" aria-pressed="false">처리가 필요할 때</button>
+          </div>
+          <ol class="route" id="route"></ol>
+          <p class="caption" id="routeNote"></p>
+        </div>
+        <p>드라이버는 앱별 게인을 적용해 섞은 소리를 공유 파일의 링 버퍼에 쓰고, Decibar 앱이 이를 읽어 실제 장치로 재생합니다.</p>
+        <p>소프트웨어 볼륨이 100%이고 EQ, 부스트, 앱별 볼륨, 통화 낮추기가 모두 꺼져 있으면 Decibar는 경로에서 완전히 빠집니다. 이때는 드라이버가 설치되어 있어도 놀고 있을 뿐입니다.</p>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="container prose">
+        <h2>왜 이렇게 골랐는가</h2>
+
+        <h3 style="margin-top:var(--space-xl)">왜 모니터 볼륨은 DDC/CI인가</h3>
+        <p>모니터의 앰프를 직접 조절하는 일반적인 방법은 DDC/CI뿐입니다. 소리를 줄이는 다른 방법은 전부 앰프에 들어가기 전의 신호를 줄이는 것이라, 앰프 자체의 잡음은 줄지 않습니다. 소리 경로에
+          끼어들지 않으므로 아무것도 설치하지 않아도 동작합니다.</p>
+        <p>비공개 API를 쓴다는 위험은 대안이 없어서 받아들였습니다. 대신 이 API를 다루는 코드를 파일 하나로 모으고, 실행 중에 찾아 불러오도록 했습니다. macOS가 바뀌어도 고칠 곳이 한 곳이고,
+          API가 사라져도 앱이 죽지 않습니다.</p>
+
+        <h3>왜 DDC/CI만으로 끝내지 않았는가</h3>
+        <p>모니터 스피커는 최솟값조차 큰 경우가 있습니다. 밤에 조용히 듣고 싶어도 DDC/CI로는 1단계와 음소거 사이로 내려갈 수 없습니다. 앱별 볼륨과 EQ도 신호를 건드려야만 가능합니다.
+          DDC/CI를 지원하지 않는 모니터에서 소리를 줄일 방법도 소프트웨어뿐입니다.</p>
+
+        <h3>왜 볼륨 키는 소프트웨어 볼륨을 조절하는가</h3>
+        <p>볼륨 키는 키를 누르고 있으면 빠르게 반복되는 입력입니다. 소프트웨어 볼륨은 오디오 버퍼 단위로 부드럽게 바뀌고 모니터와 통신하지 않습니다. 또 모니터 볼륨을 상한으로 고정해 두면 볼륨 키
+          16단계 전체가 쓸모 있는 범위 안에 놓입니다. 모니터 볼륨은 단축키와 슬라이더로 따로 바꿀 수 있습니다.</p>
+
+        <h3>왜 프로세스 탭에서 드라이버로 옮겼는가</h3>
+        <p>Decibar는 처음에 10번 프로세스 탭으로 만들어졌습니다. 드라이버 설치가 필요 없어서 쉬운 길이었지만 오디오 캡처 권한을 요구해야 했습니다. 볼륨 앱이 소리를 녹음할 권한을 달라고 하는 것은
+          사용자에게 설명하기 어렵습니다.</p>
+        <div class="stage">
+          <div class="stage-title"><span>앱이 늘어나면 어떻게 달라지나</span></div>
+          <div class="btn-row" style="justify-content:space-between">
+            <div class="btn-row" role="group" aria-label="방식 선택" style="margin-top:0">
+              <button class="btn-s" data-topo="tap" aria-pressed="false">프로세스 탭</button>
+              <button class="btn-s" data-topo="driver" aria-pressed="true">드라이버</button>
+            </div>
+            <div class="stepper"><span>볼륨을 따로 둔 앱</span><button class="btn-s" id="appsLess"
+                aria-label="앱 줄이기">−</button><output id="appsOut">3</output><button class="btn-s" id="appsMore"
+                aria-label="앱 늘리기">+</button></div>
+          </div>
+          <div class="topo" id="topo"></div>
+          <div class="tally" id="tally" aria-live="polite"></div>
+        </div>
+        <p>지금의 드라이버는 입력 장치를 노출하지 않습니다. 소리가 Decibar를 지나가긴 하지만 앱이 소리를 “녹음”하는 일은 없으므로 마이크나 오디오 캡처 권한을 묻지 않습니다. 관리자 암호를 한 번
+          묻는 대신 녹음 권한을 묻지 않는 쪽을 택한 것입니다.</p>
+        <p>앱별 처리도 단순해집니다. 탭 방식은 앱마다 탭이 하나씩 필요했지만, 드라이버는 소리가 섞이기 전에 앱별로 게인을 곱하면 됩니다.</p>
+
+        <h3>왜 항상 드라이버를 거치지 않는가</h3>
+        <p>드라이버를 거치면 지연이 조금 늘고 소리가 스테레오로 처리됩니다. 지연은 드라이버가 보고하는 값 기준으로 2048프레임, 48kHz에서 약 43ms입니다. 할 일이 없을 때까지 이 대가를 치를
+          이유가 없으므로, 소리를 바꿀 때만 켜고 그 외에는 경로에서 빠집니다. 다채널 오디오도 이때는 그대로 전달됩니다.</p>
+      </div>
+    </section>
+
+    <section class="section" id="costs">
+      <div class="container prose">
+        <h2>이 선택의 대가</h2>
+        <div class="stage dark">
+          <div class="stage-title"><span>앱이 갑자기 꺼지면</span><small>드라이버는 Decibar 앱 없이는 소리를 내지 못합니다</small></div>
+          <div class="btn-row" role="group" aria-label="복구 단계">
+            <button class="btn-s" data-step="0" aria-pressed="true">1. 정상</button>
+            <button class="btn-s" data-step="1" aria-pressed="false">2. 앱 종료</button>
+            <button class="btn-s" data-step="2" aria-pressed="false">3. 복구</button>
+          </div>
+          <ol class="route" id="recovery"></ol>
+          <p class="sim-status" id="recoveryNote" aria-live="polite"></p>
+        </div>
+        <dl class="costs">
+          <div>
+            <dt>관리자 암호</dt>
+            <dd>드라이버는 시스템 폴더 /Library/Audio/Plug-Ins/HAL 에 설치되므로 암호가 필요합니다. 설치와 업데이트 때 오디오 시스템이 재시작되어 소리가 잠시 끊깁니다.</dd>
+          </div>
+          <div>
+            <dt>무음 위험</dt>
+            <dd>드라이버는 Decibar 앱 없이는 소리를 내지 못합니다. 그래서 앱이 드라이버를 쓰는 동안 별도의 감시 프로세스가 함께 돌며, 앱이 비정상 종료되면 출력을 실제 장치로 되돌립니다. 실제
+              장치가 분리되었을 때도 앱이 다른 출력으로 옮겨 줍니다.</dd>
+          </div>
+          <div>
+            <dt>소리 설정에 보이는 “Decibar”</dt>
+            <dd>처리 중에는 macOS의 출력 장치가 Decibar로 표시됩니다. 실제 출력은 Decibar 메뉴에서 고릅니다.</dd>
+          </div>
+          <div>
+            <dt>스테레오 처리</dt>
+            <dd>처리 중에는 소리가 스테레오입니다. 서라운드가 필요하면 소프트웨어 처리를 모두 끄면 됩니다.</dd>
+          </div>
+          <div>
+            <dt>비공개 API와 배포</dt>
+            <dd>DDC/CI는 비공개 API에 의존합니다. macOS 업데이트로 동작이 달라질 위험이 있습니다. 비공개 API와 시스템 드라이버 때문에 Mac App Store로 배포하지 않습니다.
+            </dd>
+          </div>
+          <div>
+            <dt>제거</dt>
+            <dd>macOS에는 앱 제거 시점에 실행되는 기능이 없습니다. 그래서 앱이 사라지면 백그라운드 작업이 이를 감지해 드라이버를 지웁니다. 앱을 휴지통으로 옮기면 1분 안에 제거됩니다.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <a class="brand" href="index.html"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <span>macOS 26 이상, Apple 실리콘 필요</span>
+      <a href="mailto:support@decibar.coypu.me">support@decibar.coypu.me</a>
     </div>
-    <div class="topo" id="topo"></div>
-    <div class="tally" id="tally" aria-live="polite"></div>
-  </div>
-  <p>지금의 드라이버는 입력 장치를 노출하지 않습니다. 소리가 Decibar를 지나가긴 하지만 앱이 소리를 “녹음”하는 일은 없으므로 마이크나 오디오 캡처 권한을 묻지 않습니다. 관리자 암호를 한 번 묻는 대신 녹음 권한을 묻지 않는 쪽을 택한 것입니다.</p>
-  <p>앱별 처리도 단순해집니다. 탭 방식은 앱마다 탭이 하나씩 필요했지만, 드라이버는 소리가 섞이기 전에 앱별로 게인을 곱하면 됩니다.</p>
+  </footer>
 
-  <h3>왜 항상 드라이버를 거치지 않는가</h3>
-  <p>드라이버를 거치면 지연이 조금 늘고 소리가 스테레오로 처리됩니다. 지연은 드라이버가 보고하는 값 기준으로 2048프레임, 48kHz에서 약 43ms입니다. 할 일이 없을 때까지 이 대가를 치를 이유가 없으므로, 소리를 바꿀 때만 켜고 그 외에는 경로에서 빠집니다. 다채널 오디오도 이때는 그대로 전달됩니다.</p>
-</div></section>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const press = (buttons, active) => buttons.forEach((b) => b.setAttribute('aria-pressed', b === active));
 
-<section class="section" id="costs"><div class="container prose">
-  <h2>이 선택의 대가</h2>
-  <div class="stage dark">
-    <div class="stage-title"><span>앱이 갑자기 꺼지면</span><small>드라이버는 Decibar 앱 없이는 소리를 내지 못합니다</small></div>
-    <div class="btn-row" role="group" aria-label="복구 단계">
-      <button class="btn-s" data-step="0" aria-pressed="true">1. 정상</button>
-      <button class="btn-s" data-step="1" aria-pressed="false">2. 앱 종료</button>
-      <button class="btn-s" data-step="2" aria-pressed="false">3. 복구</button>
-    </div>
-    <ol class="route" id="recovery"></ol>
-    <p class="sim-status" id="recoveryNote" aria-live="polite"></p>
-  </div>
-  <dl class="costs">
-    <div><dt>관리자 암호</dt><dd>드라이버는 시스템 폴더 /Library/Audio/Plug-Ins/HAL 에 설치되므로 암호가 필요합니다. 설치와 업데이트 때 오디오 시스템이 재시작되어 소리가 잠시 끊깁니다.</dd></div>
-    <div><dt>무음 위험</dt><dd>드라이버는 Decibar 앱 없이는 소리를 내지 못합니다. 그래서 앱이 드라이버를 쓰는 동안 별도의 감시 프로세스가 함께 돌며, 앱이 비정상 종료되면 출력을 실제 장치로 되돌립니다. 실제 장치가 분리되었을 때도 앱이 다른 출력으로 옮겨 줍니다.</dd></div>
-    <div><dt>소리 설정에 보이는 “Decibar”</dt><dd>처리 중에는 macOS의 출력 장치가 Decibar로 표시됩니다. 실제 출력은 Decibar 메뉴에서 고릅니다.</dd></div>
-    <div><dt>스테레오 처리</dt><dd>처리 중에는 소리가 스테레오입니다. 서라운드가 필요하면 소프트웨어 처리를 모두 끄면 됩니다.</dd></div>
-    <div><dt>비공개 API와 배포</dt><dd>DDC/CI는 비공개 API에 의존합니다. macOS 업데이트로 동작이 달라질 위험이 있습니다. 비공개 API와 시스템 드라이버 때문에 Mac App Store로 배포하지 않습니다.</dd></div>
-    <div><dt>제거</dt><dd>macOS에는 앱 제거 시점에 실행되는 기능이 없습니다. 그래서 앱이 사라지면 백그라운드 작업이 이를 감지해 드라이버를 지웁니다. 앱을 휴지통으로 옮기면 1분 안에 제거됩니다.</dd></div>
-  </dl>
-</div></section>
-</main>
+    // Same mapping as SoftwareGain.swift.
+    const softwareDb = (level) => (level / 100 - 1) * 40;
+    const softwareAmp = (level) => level <= 0 ? 0 : level >= 100 ? 1 : Math.pow(10, softwareDb(level) / 20);
 
-<footer><div class="container foot">
-  <a class="brand" href="index.html"><svg aria-hidden="true"><use href="#logo"/></svg>Decibar</a>
-  <span>macOS 26 이상, Apple 실리콘 필요</span>
-  <a href="mailto:support@decibar.app">support@decibar.app</a>
-</div></footer>
+    // Signal simulator
+    const canvas = $('wave'), ctx = canvas.getContext('2d');
+    const simSw = $('sim-sw'), simMon = $('sim-mon'), pulse = $('pulse');
+    const presets = [...document.querySelectorAll('[data-sw]')];
+    let shownSw = 1, shownMon = 1, phase = 0, visible = true, pulseTimer;
+    // Heights follow perceived loudness; the monitor's lowest step stays clearly audible.
+    const swHeight = () => Math.sqrt(softwareAmp(+simSw.value));
+    const monHeight = () => +simMon.value === 0 ? 0 : 0.34 + 0.66 * +simMon.value / 100;
+    shownSw = swHeight(); shownMon = monHeight();
 
-<script>
-const $ = (id) => document.getElementById(id);
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const press = (buttons, active) => buttons.forEach((b) => b.setAttribute('aria-pressed', b === active));
+    function resizeWave() {
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = canvas.clientWidth * ratio;
+      canvas.height = canvas.clientHeight * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      drawWave();
+    }
+    function drawWave() {
+      const w = canvas.clientWidth, h = canvas.clientHeight, mid = h / 2;
+      const ease = (x, at) => { const t = Math.min(Math.max((x - at + 0.04) / 0.08, 0), 1); return t * t * (3 - 2 * t); };
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255,255,255,.14)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 5]);
+      [0.3, 0.7].forEach((x) => { ctx.beginPath(); ctx.moveTo(x * w, 0); ctx.lineTo(x * w, h); ctx.stroke(); });
+      ctx.setLineDash([]);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let px = 0; px <= w; px += 2) {
+        const x = px / w;
+        const gain = (1 + (shownSw - 1) * ease(x, 0.3)) * (1 + (shownMon - 1) * ease(x, 0.7));
+        const u = px / 34 - phase;
+        const y = Math.sin(u) * 0.62 + Math.sin(u * 2.3) * 0.25 + Math.sin(u * 0.37) * 0.13;
+        const lineY = mid - y * gain * (mid - 4);
+        px ? ctx.lineTo(px, lineY) : ctx.moveTo(px, lineY);
+      }
+      ctx.stroke();
+    }
+    function waveLoop() {
+      if (visible) {
+        shownSw += (swHeight() - shownSw) * 0.14;
+        shownMon += (monHeight() - shownMon) * 0.14;
+        phase += 0.06;
+        drawWave();
+      }
+      requestAnimationFrame(waveLoop);
+    }
+    function sendPulse() {
+      const level = Math.round(+simMon.value);
+      pulse.textContent = '0x62 = ' + level;
+      if (reduced) return;
+      clearTimeout(pulseTimer);
+      pulseTimer = setTimeout(() => {
+        pulse.animate([{ left: '10%', opacity: 0 }, { left: '20%', opacity: 1, offset: 0.15 }, { left: '66%', opacity: 1, offset: 0.85 }, { left: '70%', opacity: 0 }], { duration: 900, easing: 'ease-in-out' });
+      }, 80);
+    }
+    function updateSim() {
+      const sw = +simSw.value, mon = +simMon.value;
+      $('sim-sw-out').textContent = Math.round(sw * 10) / 10;
+      $('sim-mon-out').textContent = mon;
+      const bypass = sw >= 100;
+      $('nodeDecibar').classList.toggle('hot', !bypass);
+      $('nodeDecibar').classList.toggle('off', bypass);
+      $('nodeDecibarNote').textContent = bypass ? '경로 밖' : '2층';
+      let status = bypass
+        ? 'Decibar는 경로 밖에 있고, 소리는 그대로 모니터로 갑니다.'
+        : `Decibar가 소리를 ${Math.abs(softwareDb(sw)).toFixed(1)}dB 줄여서 보냅니다.`;
+      if (sw === 0) status = 'Decibar가 소리를 무음으로 만듭니다.';
+      status += ' ' + (mon === 0 ? '모니터 앰프는 0입니다.' : mon <= 5 ? '모니터는 최솟값 근처라 DDC/CI로는 더 내려가기 어렵습니다.' : `모니터 앰프는 ${mon}으로 설정되어 있습니다.`);
+      $('simStatus').textContent = status;
+      if (reduced) { shownSw = swHeight(); shownMon = monHeight(); drawWave(); }
+    }
+    [simSw, simMon].forEach((input) => input.addEventListener('input', () => { press(presets, null); updateSim(); }));
+    simMon.addEventListener('input', sendPulse);
+    presets.forEach((b) => b.addEventListener('click', () => {
+      const changed = simMon.value !== b.dataset.mon;
+      simSw.value = b.dataset.sw; simMon.value = b.dataset.mon;
+      press(presets, b); updateSim();
+      if (changed) sendPulse();
+    }));
+    new ResizeObserver(resizeWave).observe(canvas);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
+    updateSim();
+    resizeWave();
+    if (!reduced) waveLoop();
 
-// Same mapping as SoftwareGain.swift.
-const softwareDb = (level) => (level / 100 - 1) * 40;
-const softwareAmp = (level) => level <= 0 ? 0 : level >= 100 ? 1 : Math.pow(10, softwareDb(level) / 20);
+    // Volume key comparison
+    const segsOk = $('segsOk'), segsBlocked = $('segsBlocked');
+    segsOk.innerHTML = segsBlocked.innerHTML = '<i></i>'.repeat(16);
+    let keyLevel = 8;
+    const paintKeys = () => [...segsOk.children].forEach((s, i) => s.classList.toggle('on', i < keyLevel));
+    const pressKey = (delta) => {
+      keyLevel = Math.min(Math.max(keyLevel + delta, 0), 16);
+      paintKeys();
+      const hud = $('hudBlocked');
+      hud.classList.remove('shake');
+      void hud.offsetWidth;
+      hud.classList.add('shake');
+    };
+    $('keyDown').addEventListener('click', () => pressKey(-1));
+    $('keyUp').addEventListener('click', () => pressKey(1));
+    paintKeys();
 
-// Signal simulator
-const canvas = $('wave'), ctx = canvas.getContext('2d');
-const simSw = $('sim-sw'), simMon = $('sim-mon'), pulse = $('pulse');
-const presets = [...document.querySelectorAll('[data-sw]')];
-let shownSw = 1, shownMon = 1, phase = 0, visible = true, pulseTimer;
-// Heights follow perceived loudness; the monitor's lowest step stays clearly audible.
-const swHeight = () => Math.sqrt(softwareAmp(+simSw.value));
-const monHeight = () => +simMon.value === 0 ? 0 : 0.34 + 0.66 * +simMon.value / 100;
-shownSw = swHeight(); shownMon = monHeight();
+    // Method filter
+    const filters = [...document.querySelectorAll('[data-filter]')], methods = [...document.querySelectorAll('.method')];
+    filters.forEach((b) => b.addEventListener('click', () => {
+      press(filters, b);
+      methods.forEach((m) => { m.hidden = b.dataset.filter !== 'all' && !m.dataset.group.split(' ').includes(b.dataset.filter); });
+    }));
 
-function resizeWave() {
-  const ratio = Math.min(devicePixelRatio || 1, 2);
-  canvas.width = canvas.clientWidth * ratio;
-  canvas.height = canvas.clientHeight * ratio;
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-  drawWave();
-}
-function drawWave() {
-  const w = canvas.clientWidth, h = canvas.clientHeight, mid = h / 2;
-  const ease = (x, at) => { const t = Math.min(Math.max((x - at + 0.04) / 0.08, 0), 1); return t * t * (3 - 2 * t); };
-  ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(255,255,255,.14)';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([3, 5]);
-  [0.3, 0.7].forEach((x) => { ctx.beginPath(); ctx.moveTo(x * w, 0); ctx.lineTo(x * w, h); ctx.stroke(); });
-  ctx.setLineDash([]);
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let px = 0; px <= w; px += 2) {
-    const x = px / w;
-    const gain = (1 + (shownSw - 1) * ease(x, 0.3)) * (1 + (shownMon - 1) * ease(x, 0.7));
-    const u = px / 34 - phase;
-    const y = Math.sin(u) * 0.62 + Math.sin(u * 2.3) * 0.25 + Math.sin(u * 0.37) * 0.13;
-    const lineY = mid - y * gain * (mid - 4);
-    px ? ctx.lineTo(px, lineY) : ctx.moveTo(px, lineY);
-  }
-  ctx.stroke();
-}
-function waveLoop() {
-  if (visible) {
-    shownSw += (swHeight() - shownSw) * 0.14;
-    shownMon += (monHeight() - shownMon) * 0.14;
-    phase += 0.06;
-    drawWave();
-  }
-  requestAnimationFrame(waveLoop);
-}
-function sendPulse() {
-  const level = Math.round(+simMon.value);
-  pulse.textContent = '0x62 = ' + level;
-  if (reduced) return;
-  clearTimeout(pulseTimer);
-  pulseTimer = setTimeout(() => {
-    pulse.animate([{ left: '10%', opacity: 0 }, { left: '20%', opacity: 1, offset: 0.15 }, { left: '66%', opacity: 1, offset: 0.85 }, { left: '70%', opacity: 0 }], { duration: 900, easing: 'ease-in-out' });
-  }, 80);
-}
-function updateSim() {
-  const sw = +simSw.value, mon = +simMon.value;
-  $('sim-sw-out').textContent = Math.round(sw * 10) / 10;
-  $('sim-mon-out').textContent = mon;
-  const bypass = sw >= 100;
-  $('nodeDecibar').classList.toggle('hot', !bypass);
-  $('nodeDecibar').classList.toggle('off', bypass);
-  $('nodeDecibarNote').textContent = bypass ? '경로 밖' : '2층';
-  let status = bypass
-    ? 'Decibar는 경로 밖에 있고, 소리는 그대로 모니터로 갑니다.'
-    : `Decibar가 소리를 ${Math.abs(softwareDb(sw)).toFixed(1)}dB 줄여서 보냅니다.`;
-  if (sw === 0) status = 'Decibar가 소리를 무음으로 만듭니다.';
-  status += ' ' + (mon === 0 ? '모니터 앰프는 0입니다.' : mon <= 5 ? '모니터는 최솟값 근처라 DDC/CI로는 더 내려가기 어렵습니다.' : `모니터 앰프는 ${mon}으로 설정되어 있습니다.`);
-  $('simStatus').textContent = status;
-  if (reduced) { shownSw = swHeight(); shownMon = monHeight(); drawWave(); }
-}
-[simSw, simMon].forEach((input) => input.addEventListener('input', () => { press(presets, null); updateSim(); }));
-simMon.addEventListener('input', sendPulse);
-presets.forEach((b) => b.addEventListener('click', () => {
-  const changed = simMon.value !== b.dataset.mon;
-  simSw.value = b.dataset.sw; simMon.value = b.dataset.mon;
-  press(presets, b); updateSim();
-  if (changed) sendPulse();
-}));
-new ResizeObserver(resizeWave).observe(canvas);
-new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
-updateSim();
-resizeWave();
-if (!reduced) waveLoop();
-
-// Volume key comparison
-const segsOk = $('segsOk'), segsBlocked = $('segsBlocked');
-segsOk.innerHTML = segsBlocked.innerHTML = '<i></i>'.repeat(16);
-let keyLevel = 8;
-const paintKeys = () => [...segsOk.children].forEach((s, i) => s.classList.toggle('on', i < keyLevel));
-const pressKey = (delta) => {
-  keyLevel = Math.min(Math.max(keyLevel + delta, 0), 16);
-  paintKeys();
-  const hud = $('hudBlocked');
-  hud.classList.remove('shake');
-  void hud.offsetWidth;
-  hud.classList.add('shake');
-};
-$('keyDown').addEventListener('click', () => pressKey(-1));
-$('keyUp').addEventListener('click', () => pressKey(1));
-paintKeys();
-
-// Method filter
-const filters = [...document.querySelectorAll('[data-filter]')], methods = [...document.querySelectorAll('.method')];
-filters.forEach((b) => b.addEventListener('click', () => {
-  press(filters, b);
-  methods.forEach((m) => { m.hidden = b.dataset.filter !== 'all' && !m.dataset.group.split(' ').includes(b.dataset.filter); });
-}));
-
-// DDC packet, as built by DDCPacket.setVCP
-const hex = (n) => '0x' + n.toString(16).toUpperCase().padStart(2, '0');
-const bytes = $('bytes'), ddc = $('ddc');
-const byteNames = ['길이', 'Set VCP', '스피커 볼륨', '값 상위', '값 하위', '체크섬'];
-bytes.innerHTML = byteNames.map((name, i) => `<div class="byte${i >= 3 ? ' live' : ''}" style="--i:${i}"><code></code><span>${name}</span></div>`).join('');
-function paintPacket() {
-  const value = +ddc.value, body = [0x84, 0x03, 0x62, value >> 8, value & 0xFF];
-  const packet = [...body, body.reduce((sum, b) => sum ^ b, 0x6E ^ 0x51)];
-  packet.forEach((b, i) => { bytes.children[i].querySelector('code').textContent = hex(b); });
-  $('ddcOut').textContent = value;
-}
-ddc.addEventListener('input', () => {
-  paintPacket();
-  bytes.classList.remove('send');
-  void bytes.offsetWidth;
-  bytes.classList.add('send');
-});
-paintPacket();
-
-// Software gain bar
-const gain = $('gain');
-function paintGain() {
-  const level = +gain.value;
-  $('bar16').style.setProperty('--level', level / 100);
-  $('gainLevel').textContent = Math.round(level * 100) / 100;
-  $('gainDb').textContent = level === 0 ? '무음' : softwareDb(level).toFixed(1) + 'dB';
-  $('gainAmp').textContent = '원래 신호 세기의 ' + (softwareAmp(level) * 100).toFixed(1) + '%';
-}
-const stepGain = (sign) => {
-  const step = 100 / 16 / ($('fine').checked ? 4 : 1);
-  gain.value = Math.min(Math.max(+gain.value + sign * step, 0), 100);
-  paintGain();
-};
-gain.addEventListener('input', paintGain);
-$('gainDown').addEventListener('click', () => stepGain(-1));
-$('gainUp').addEventListener('click', () => stepGain(1));
-paintGain();
-
-// Audio path
-const routes = {
-  idle: { nodes: [['앱'], ['실제 출력 장치'], ['모니터']], note: '소리가 곧바로 나갑니다. 다채널 오디오도 그대로 전달됩니다.' },
-  busy: { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱(볼륨, EQ, 리미터)', 'on'], ['실제 출력 장치'], ['모니터']], note: '앱은 Decibar 장치로 소리를 내고, Decibar 앱이 처리한 소리를 실제 장치로 재생합니다.' },
-};
-const paintRoute = (list, nodes) => { list.innerHTML = nodes.map(([text, cls]) => `<li class="${cls || ''}">${text}</li>`).join(''); };
-const routeButtons = [...document.querySelectorAll('[data-route]')];
-const showRoute = (key) => { paintRoute($('route'), routes[key].nodes); $('routeNote').textContent = routes[key].note; };
-routeButtons.forEach((b) => b.addEventListener('click', () => { press(routeButtons, b); showRoute(b.dataset.route); }));
-showRoute('idle');
-
-// Tap versus driver
-const topoButtons = [...document.querySelectorAll('[data-topo]')];
-let topoMode = 'driver', appCount = 3;
-function paintTopo() {
-  const apps = Array.from({ length: appCount }, (_, i) => `<div>앱 ${i + 1}</div>`).join('') + '<div>나머지 앱</div>';
-  const middle = topoMode === 'tap'
-    ? Array.from({ length: appCount }, (_, i) => `<div class="on">앱 ${i + 1} 전용 탭</div>`).join('') + '<div class="on">전역 탭</div>'
-    : Array.from({ length: appCount }, (_, i) => `<div>앱 ${i + 1} 게인</div>`).join('') + '<div>기본 게인</div>';
-  const end = topoMode === 'tap' ? '<div>비공개 집합 기기</div><div>실제 출력 장치</div>' : '<div class="on">드라이버의 믹스 한 곳</div><div>실제 출력 장치</div>';
-  $('topo').innerHTML = `<div class="topo-col">${apps}</div><div class="topo-col">${middle}</div><div class="topo-col">${end}</div>`;
-  $('tally').innerHTML = (topoMode === 'tap'
-    ? [['만드는 탭', `${appCount + 1}개`], ['필요한 권한', '오디오 캡처'], ['설치', '없음']]
-    : [['소리를 섞는 곳', '1곳'], ['필요한 권한', '없음'], ['설치', '관리자 암호']]
-  ).map(([k, v]) => `<div><span>${k}</span>${v}</div>`).join('');
-  $('appsOut').textContent = appCount;
-}
-topoButtons.forEach((b) => b.addEventListener('click', () => { press(topoButtons, b); topoMode = b.dataset.topo; paintTopo(); }));
-$('appsLess').addEventListener('click', () => { appCount = Math.max(appCount - 1, 1); paintTopo(); });
-$('appsMore').addEventListener('click', () => { appCount = Math.min(appCount + 1, 6); paintTopo(); });
-paintTopo();
-
-// Recovery steps
-const recovery = [
-  { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱', 'on'], ['실제 출력 장치']], note: '감시 프로세스가 Decibar 앱이 살아 있는지 지켜봅니다.' },
-  { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱', 'down'], ['실제 출력 장치', 'down']], note: 'Decibar 앱이 꺼지면 드라이버의 소리를 받아 줄 곳이 없어 무음이 됩니다.' },
-  { nodes: [['앱'], ['실제 출력 장치']], note: '감시 프로세스가 앱의 종료를 감지하고 시스템 출력을 실제 장치로 되돌립니다.' },
-];
-const stepButtons = [...document.querySelectorAll('[data-step]')];
-let stepIndex = 0, stepTimer = null;
-const showStep = (i) => {
-  stepIndex = i;
-  press(stepButtons, stepButtons[i]);
-  paintRoute($('recovery'), recovery[i].nodes);
-  $('recoveryNote').textContent = recovery[i].note;
-};
-const stopSteps = () => { clearInterval(stepTimer); stepTimer = null; };
-stepButtons.forEach((b, i) => b.addEventListener('click', () => { stopSteps(); stepsTouched = true; showStep(i); }));
-let stepsTouched = false;
-showStep(0);
-if (!reduced) {
-  new IntersectionObserver(([e]) => {
-    stopSteps();
-    if (e.isIntersecting && !stepsTouched) stepTimer = setInterval(() => showStep((stepIndex + 1) % 3), 3200);
-  }, { threshold: 0.5 }).observe($('recovery'));
-}
-
-// Chapter highlight
-const chapterLinks = [...document.querySelectorAll('.chapters a')];
-const chapterObserver = new IntersectionObserver((entries) => {
-  entries.filter((e) => e.isIntersecting).forEach((e) => {
-    chapterLinks.forEach((a) => {
-      const active = a.hash === '#' + e.target.id;
-      a.classList.toggle('active', active);
-      if (active) a.parentElement.scrollLeft = a.offsetLeft - a.parentElement.offsetLeft - 16;
+    // DDC packet, as built by DDCPacket.setVCP
+    const hex = (n) => '0x' + n.toString(16).toUpperCase().padStart(2, '0');
+    const bytes = $('bytes'), ddc = $('ddc');
+    const byteNames = ['길이', 'Set VCP', '스피커 볼륨', '값 상위', '값 하위', '체크섬'];
+    bytes.innerHTML = byteNames.map((name, i) => `<div class="byte${i >= 3 ? ' live' : ''}" style="--i:${i}"><code></code><span>${name}</span></div>`).join('');
+    function paintPacket() {
+      const value = +ddc.value, body = [0x84, 0x03, 0x62, value >> 8, value & 0xFF];
+      const packet = [...body, body.reduce((sum, b) => sum ^ b, 0x6E ^ 0x51)];
+      packet.forEach((b, i) => { bytes.children[i].querySelector('code').textContent = hex(b); });
+      $('ddcOut').textContent = value;
+    }
+    ddc.addEventListener('input', () => {
+      paintPacket();
+      bytes.classList.remove('send');
+      void bytes.offsetWidth;
+      bytes.classList.add('send');
     });
-  });
-}, { rootMargin: '-45% 0px -50% 0px' });
-document.querySelectorAll('main section').forEach((s) => chapterObserver.observe(s));
-</script>
+    paintPacket();
+
+    // Software gain bar
+    const gain = $('gain');
+    function paintGain() {
+      const level = +gain.value;
+      $('bar16').style.setProperty('--level', level / 100);
+      $('gainLevel').textContent = Math.round(level * 100) / 100;
+      $('gainDb').textContent = level === 0 ? '무음' : softwareDb(level).toFixed(1) + 'dB';
+      $('gainAmp').textContent = '원래 신호 세기의 ' + (softwareAmp(level) * 100).toFixed(1) + '%';
+    }
+    const stepGain = (sign) => {
+      const step = 100 / 16 / ($('fine').checked ? 4 : 1);
+      gain.value = Math.min(Math.max(+gain.value + sign * step, 0), 100);
+      paintGain();
+    };
+    gain.addEventListener('input', paintGain);
+    $('gainDown').addEventListener('click', () => stepGain(-1));
+    $('gainUp').addEventListener('click', () => stepGain(1));
+    paintGain();
+
+    // Audio path
+    const routes = {
+      idle: { nodes: [['앱'], ['실제 출력 장치'], ['모니터']], note: '소리가 곧바로 나갑니다. 다채널 오디오도 그대로 전달됩니다.' },
+      busy: { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱(볼륨, EQ, 리미터)', 'on'], ['실제 출력 장치'], ['모니터']], note: '앱은 Decibar 장치로 소리를 내고, Decibar 앱이 처리한 소리를 실제 장치로 재생합니다.' },
+    };
+    const paintRoute = (list, nodes) => { list.innerHTML = nodes.map(([text, cls]) => `<li class="${cls || ''}">${text}</li>`).join(''); };
+    const routeButtons = [...document.querySelectorAll('[data-route]')];
+    const showRoute = (key) => { paintRoute($('route'), routes[key].nodes); $('routeNote').textContent = routes[key].note; };
+    routeButtons.forEach((b) => b.addEventListener('click', () => { press(routeButtons, b); showRoute(b.dataset.route); }));
+    showRoute('idle');
+
+    // Tap versus driver
+    const topoButtons = [...document.querySelectorAll('[data-topo]')];
+    let topoMode = 'driver', appCount = 3;
+    function paintTopo() {
+      const apps = Array.from({ length: appCount }, (_, i) => `<div>앱 ${i + 1}</div>`).join('') + '<div>나머지 앱</div>';
+      const middle = topoMode === 'tap'
+        ? Array.from({ length: appCount }, (_, i) => `<div class="on">앱 ${i + 1} 전용 탭</div>`).join('') + '<div class="on">전역 탭</div>'
+        : Array.from({ length: appCount }, (_, i) => `<div>앱 ${i + 1} 게인</div>`).join('') + '<div>기본 게인</div>';
+      const end = topoMode === 'tap' ? '<div>비공개 집합 기기</div><div>실제 출력 장치</div>' : '<div class="on">드라이버의 믹스 한 곳</div><div>실제 출력 장치</div>';
+      $('topo').innerHTML = `<div class="topo-col">${apps}</div><div class="topo-col">${middle}</div><div class="topo-col">${end}</div>`;
+      $('tally').innerHTML = (topoMode === 'tap'
+        ? [['만드는 탭', `${appCount + 1}개`], ['필요한 권한', '오디오 캡처'], ['설치', '없음']]
+        : [['소리를 섞는 곳', '1곳'], ['필요한 권한', '없음'], ['설치', '관리자 암호']]
+      ).map(([k, v]) => `<div><span>${k}</span>${v}</div>`).join('');
+      $('appsOut').textContent = appCount;
+    }
+    topoButtons.forEach((b) => b.addEventListener('click', () => { press(topoButtons, b); topoMode = b.dataset.topo; paintTopo(); }));
+    $('appsLess').addEventListener('click', () => { appCount = Math.max(appCount - 1, 1); paintTopo(); });
+    $('appsMore').addEventListener('click', () => { appCount = Math.min(appCount + 1, 6); paintTopo(); });
+    paintTopo();
+
+    // Recovery steps
+    const recovery = [
+      { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱', 'on'], ['실제 출력 장치']], note: '감시 프로세스가 Decibar 앱이 살아 있는지 지켜봅니다.' },
+      { nodes: [['앱'], ['Decibar 장치', 'on'], ['Decibar 앱', 'down'], ['실제 출력 장치', 'down']], note: 'Decibar 앱이 꺼지면 드라이버의 소리를 받아 줄 곳이 없어 무음이 됩니다.' },
+      { nodes: [['앱'], ['실제 출력 장치']], note: '감시 프로세스가 앱의 종료를 감지하고 시스템 출력을 실제 장치로 되돌립니다.' },
+    ];
+    const stepButtons = [...document.querySelectorAll('[data-step]')];
+    let stepIndex = 0, stepTimer = null;
+    const showStep = (i) => {
+      stepIndex = i;
+      press(stepButtons, stepButtons[i]);
+      paintRoute($('recovery'), recovery[i].nodes);
+      $('recoveryNote').textContent = recovery[i].note;
+    };
+    const stopSteps = () => { clearInterval(stepTimer); stepTimer = null; };
+    stepButtons.forEach((b, i) => b.addEventListener('click', () => { stopSteps(); stepsTouched = true; showStep(i); }));
+    let stepsTouched = false;
+    showStep(0);
+    if (!reduced) {
+      new IntersectionObserver(([e]) => {
+        stopSteps();
+        if (e.isIntersecting && !stepsTouched) stepTimer = setInterval(() => showStep((stepIndex + 1) % 3), 3200);
+      }, { threshold: 0.5 }).observe($('recovery'));
+    }
+
+    // Chapter highlight
+    const chapterLinks = [...document.querySelectorAll('.chapters a')];
+    const chapterObserver = new IntersectionObserver((entries) => {
+      entries.filter((e) => e.isIntersecting).forEach((e) => {
+        chapterLinks.forEach((a) => {
+          const active = a.hash === '#' + e.target.id;
+          a.classList.toggle('active', active);
+          if (active) a.parentElement.scrollLeft = a.offsetLeft - a.parentElement.offsetLeft - 16;
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('main section').forEach((s) => chapterObserver.observe(s));
+  </script>
 </body>
+
 </html>
