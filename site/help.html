@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decibar Help</title>
+<link rel="icon" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>main{max-width:680px;margin:0 auto;padding:48px 16px 80px}main h2{margin-top:40px}</style>
+</head>
+<body>
+<main>
+<h1>Decibar Help</h1>
+
+<h2>Monitor volume doesn’t change</h2>
+<p>Decibar talks to the monitor over the display cable using DDC/CI. Turn on DDC/CI in the monitor’s on-screen menu, then choose Search Again in Decibar. Docks and adapters sometimes block DDC/CI; try a direct cable. If a monitor can’t be controlled at all, Settings &gt; Monitors offers software volume instead.</p>
+<p>A monitor can stop answering for a moment around sleep or an input change. Decibar shows “Reconnecting…” and sends your last volume once the monitor is back.</p>
+
+<h2>Why does Decibar install an audio driver?</h2>
+<p>Lowering audio below the monitor’s minimum, per-app volume and EQ all need to change sound before it reaches the speakers. The driver adds an audio device called Decibar that does this, so the app needs no microphone or recording permission. Controlling the monitor’s own volume doesn’t need the driver. Decibar explains and asks the first time you turn on a feature that does. macOS asks for your administrator password, and audio pauses for a moment. If you’ve opened Decibar from the disk image, move it to Applications first. A new version may ask again when the driver changes; until then, audio features stay off. <a href="volume-methods.html" lang="ko">Decibar가 모니터 볼륨을 다루는 방법</a> compares the alternatives.</p>
+
+<h2>Does Decibar record my audio?</h2>
+<p>No. Decibar doesn’t save audio or send it anywhere. While it’s processing sound, audio passes through a shared buffer on your Mac, which is cleared when playback stops. Only your user account and the system’s audio service can open that buffer. That also means another app running under your account could read it while audio plays, the same way it could read your other files.</p>
+
+<h2>Sound Settings shows “Decibar” as the output</h2>
+<p>That’s expected while Decibar is processing audio. Sound still plays through your real output, and the menu bar slider and volume keys still change it. To switch outputs, use the Output menu in Decibar. At 100% with no EQ or app volumes, Decibar steps aside after a few seconds and audio goes straight to the device.</p>
+<p>On an HDMI or DisplayPort monitor with software volume off, there’s nothing for the system volume to change, so its slider returns to 100%.</p>
+
+<h2>There’s no sound</h2>
+<p>If Decibar quit unexpectedly, the output returns to your last device or the built-in speakers automatically. If it doesn’t, open System Settings &gt; Sound and choose your speakers, then reopen Decibar. Decibar also fixes this as soon as it opens, which is why it starts at login by default.</p>
+
+<h2>Surround sound plays as stereo</h2>
+<p>Audio is stereo while Decibar is processing it, and plays on the channels set as the stereo pair in Audio MIDI Setup. Other speakers stay silent. To keep multichannel audio, set software volume to 100% and turn off EQ, boost, app volumes and call ducking.</p>
+
+<h2>Removing Decibar</h2>
+<p>Move Decibar to the Trash. If it was in an Applications folder, the audio driver removes itself within a minute; from anywhere else it can take up to a day. It stays if Spotlight is turned off, because Decibar can’t then tell whether a copy remains. To remove only the driver, use Decibar Settings &gt; Support.</p>
+<p><a href="privacy.html">Privacy Policy</a></p>
+<p><a href="terms.html">Terms of Use</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "ignoresMuteCommand": [
+    { "vendorID": 4268, "modelID": 41587 }
+  ]
+}
