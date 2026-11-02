@@ -55,28 +55,21 @@
   <main class="home">
     <section class="hero" id="hero">
       <div class="container">
-        <div class="hero-text">
-          <h1>macOS can’t turn this monitor down.</h1>
-          <div class="hero-aside">
+        <div class="hero-stage">
+          <div class="hero-copy">
+            <h1>macOS can’t turn this monitor down.</h1>
             <p class="lead">Decibar puts your HDMI or DisplayPort monitor’s speakers on the Mac volume keys.</p>
-            <a class="btn"
-              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
+            <a class="btn" href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free</a>
           </div>
-        </div>
-        <div class="panels instrument">
-          <div class="reading-cell">
-            <span class="reading" id="levelText">−12.5 dB</span>
-            <span class="measured" id="levelPercent">69%</span>
-          </div>
-          <div class="control-cell">
-            <div class="control-head"><label for="level">Try software volume</label><span>Drag, or use the arrow
-                keys</span></div>
-            <input class="meter" id="level" type="range" min="0" max="16" step="1" value="11" style="--v:68.75%"
-              aria-label="Page volume, sixteen steps">
-            <div class="ticks" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-          </div>
+          <figure class="hero-demo">
+            <video id="demo" muted loop playsinline preload="metadata" width="360" height="572" poster="/images/hero-demo.jpg"
+              aria-label="The Decibar menu: the monitor volume comes down, then Safari moves to the headphones and on to the speakers too.">
+              <source src="/images/hero-demo.mp4" type="video/mp4">
+            </video>
+            <figcaption>Simulated devices, in the real menu.
+              <button class="text-button" id="demoToggle" type="button" hidden>Pause</button>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -366,16 +359,17 @@
   </footer>
 
   <script>
+    // Waits for this script, so it stays still with scripting off or reduced motion on.
+    const demo = document.getElementById('demo'), demoToggle = document.getElementById('demoToggle');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      demoToggle.hidden = false;
+      demo.play().catch(() => { demoToggle.textContent = 'Play'; });
+      demoToggle.addEventListener('click', () => {
+        if (demo.paused) demo.play(); else demo.pause();
+        demoToggle.textContent = demo.paused ? 'Play' : 'Pause';
+      });
+    }
     const fill = (input) => input.style.setProperty('--v', (input.value - input.min) / (input.max - input.min) * 100 + '%');
-    const level = document.getElementById('level'), text = document.getElementById('levelText'), percent = document.getElementById('levelPercent');
-    // The app's own curve: linear in decibels, from 0 dB at 100% to -40 dB, and silence at 0.
-    const paint = () => {
-      const share = level.value / 16, decibels = (share - 1) * 40;
-      text.textContent = share === 0 ? 'Muted' : decibels.toFixed(1).replace('-0.0', '0.0').replace('-', '−') + ' dB';
-      percent.textContent = Math.round(share * 100) + '%';
-      fill(level);
-    };
-    level.addEventListener('input', paint);
     const mon = document.getElementById('mon');
     mon.addEventListener('input', () => { document.getElementById('monOut').textContent = mon.value + '%'; fill(mon); });
     document.querySelectorAll('.app-row output').forEach((o) => { const r = o.previousElementSibling; r.addEventListener('input', () => { o.textContent = r.value + '%'; fill(r); }); });
