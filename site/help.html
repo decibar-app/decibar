@@ -52,13 +52,17 @@
 <p>A monitor can stop answering for a moment around sleep or an input change. Decibar shows “Reconnecting…” and sends your last volume once the monitor is back.</p>
 
 <h2>Why does Decibar install an audio driver?</h2>
-<p>Lowering audio below the monitor’s minimum, per-app volume and EQ all need to change sound before it reaches the speakers. The driver adds an audio device called Decibar that does this, so the app needs no microphone or recording permission. Controlling the monitor’s own volume doesn’t need the driver. Decibar explains and asks the first time you turn on a feature that does. macOS asks for your administrator password, and audio pauses for a moment. If you’ve opened Decibar from the disk image, move it to Applications first. A new version may ask again when the driver changes; until then, audio features stay off. <a href="/volume-methods">How Decibar handles monitor volume</a> compares the alternatives.</p>
+<p>Lowering audio below the monitor’s minimum, per-app volume, app outputs and EQ all need to change sound before it reaches the speakers. The driver adds an audio device called Decibar that does this, so the app needs no microphone or recording permission. Controlling the monitor’s own volume doesn’t need the driver. Decibar explains and asks the first time you turn on a feature that does. macOS asks for your administrator password, and audio pauses for a moment. If you’ve opened Decibar from the disk image, move it to Applications first. A new version may ask again when the driver changes; until then, audio features stay off. <a href="/volume-methods">How Decibar handles monitor volume</a> compares the alternatives.</p>
+
+<h2>An app doesn’t play on the device I chose</h2>
+<p>With Pro, the speaker button beside an app in Decibar chooses where it plays, and the app moves under that device. This works for apps that follow the system output. An app with its own speaker setting, such as a call app or an audio editor, ignores it until you set that app to the system output. If a device is unplugged or won’t start, its apps return to the system output, and they go back once it’s available. To clear every choice, use Reset App Outputs in Settings &gt; Sound.</p>
+<p>Devices playing the same app aren’t aligned with each other, so two speakers in one room can sound slightly out of step, and Bluetooth lags more.</p>
 
 <h2>Does Decibar record my audio?</h2>
 <p>No. Decibar doesn’t save audio or send it anywhere. While it’s processing sound, audio passes through a shared buffer on your Mac, which is cleared when playback stops. Only your user account and the system’s audio service can open that buffer. That also means another app running under your account could read it while audio plays, the same way it could read your other files.</p>
 
 <h2>Sound Settings shows “Decibar” as the output</h2>
-<p>That’s expected while Decibar is processing audio. Sound still plays through your real output, and the menu bar slider and volume keys still change it. To switch outputs, use the Output menu in Decibar. At 100% with no EQ or app volumes, Decibar steps aside after a few seconds and audio goes straight to the device.</p>
+<p>That’s expected while Decibar is processing audio. Sound still plays through your real output, and the menu bar slider and volume keys still change it. To switch outputs, use the menu under System Output in Decibar. At 100% with no EQ, app volumes or app outputs, Decibar steps aside after a few seconds and audio goes straight to the device.</p>
 <p>On an HDMI or DisplayPort monitor with software volume off, there’s nothing for the system volume to change, so its slider returns to 100%.</p>
 
 <h2>There’s no sound</h2>
@@ -80,9 +84,10 @@
           </svg>Decibar</a>
       </div>
       <ul>
-        <li><span>Requires macOS 26 or later on Apple silicon.</span></li>
+        <li><span>Requires macOS 15 or later on Apple silicon.</span></li>
         <li><a href="/faq">FAQ</a></li>
         <li><a href="/help">Help</a></li>
+        <li><a href="/changelog">Changelog</a></li>
         <li><a href="/volume-methods">How it works</a></li>
         <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
         <li><a href="/compare">Compare</a></li>

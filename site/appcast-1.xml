@@ -3,31 +3,31 @@
     <channel>
         <title>Decibar</title>
         <item>
+            <title>1.1</title>
+            <pubDate>Mon, 02 Nov 2026 22:48:36 +0900</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar-1.1.dmg" length="3391674" type="application/octet-stream" sparkle:edSignature="7nRsA8Ypqt2DALxmdSulLa+bEFkTz75RpRsL49sAAKEuOHjh4jHLbSVsv+yJO6OGp3GWOI/7l5LEQA0lhPHzDg=="/>
+        </item>
+        <item>
+            <title>1.0</title>
+            <pubDate>Sat, 31 Oct 2026 17:41:09 +0900</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar-1.0.dmg" length="3334799" type="application/octet-stream" sparkle:edSignature="avTdqVQuUHRCclKpL0C7TM7WynTVwJ0CqNtjKi1VCIXLahcbP8W2MdSW30zcagSqdPT20g6QKpaoX43IAPCSDA=="/>
+        </item>
+        <item>
             <title>1.0</title>
             <pubDate>Sat, 31 Oct 2026 17:41:09 +0900</pubDate>
             <sparkle:version>3</sparkle:version>
             <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
             <enclosure url="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar-1.0.dmg" length="3315715" type="application/octet-stream" sparkle:edSignature="RiOuJRVhPwhPHohFd1GoGG5XdgK81btgzOThu3JdjLzf/kYCpoqticPU2w+otP2BWZ4K3Cz6nW50fppK3uikCw=="/>
-        </item>
-        <item>
-            <title>1.0</title>
-            <pubDate>Sat, 31 Oct 2026 17:41:09 +0900</pubDate>
-            <sparkle:version>2</sparkle:version>
-            <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar-1.0.dmg" length="3315743" type="application/octet-stream" sparkle:edSignature="1Ohr6PPuJIlg2RmeGdjjZ4j0xqkrXmFKihfu8cLdC82TMyb4WwdoioMYDLn6FSpgkXMlmzYHzm6KxxYlRNKgCA=="/>
-        </item>
-        <item>
-            <title>1.0</title>
-            <pubDate>Sat, 31 Oct 2026 17:41:09 +0900</pubDate>
-            <sparkle:version>1</sparkle:version>
-            <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar-1.0.dmg" length="3315735" type="application/octet-stream" sparkle:edSignature="BweS/CE55hnZnplnjQkfy5HFTsXij6MrLBqvyUYlTvpOUX/u36/zpXwVA+ggCiCZCeV2HlhAHHp5JRyb6FuvBg=="/>
         </item>
     </channel>
 </rss>

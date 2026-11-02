@@ -15,6 +15,7 @@
 /* Hallmark · answered F15 · the extra column gaps sit inside the demonstration panels on volume-methods, each sized to its own controls */
 /* Hallmark · page: 404 · job: return · hero: Banner over the instrument · signature: a level that stays at −∞ dB however far it is raised · system: Console, no new tokens · finish-review: subagent · 6 findings · 6 resolved */
 /* Hallmark · pre-emit critique: P4 H4 E5 S5 R4 V4 · weakest: H, the FAQ is rows of equal weight, so the first question became the hero and the rest sit under pinned heads */
+/* Hallmark · page: changelog · job: try · hero: Banner · shape: Long Document on pinned chapters · signature: each version number set as a large reading, pinned beside its changes · system: Console, no new tokens */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -228,6 +229,16 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .letter-note { max-width: 48ch; color: var(--color-ink-2); font-size: var(--text-lead); line-height: 1.45; }
 .letter .brand { margin-top: var(--space-lg); }
 .letter ul { display: grid; gap: var(--space-2xs); margin: 0; padding: 0; list-style: none; justify-items: end; font-size: var(--text-sm); }
+
+/* Changelog */
+.release-version { font-family: var(--font-outlier); font-size: var(--text-display); font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: var(--color-ink); font-variant-numeric: tabular-nums slashed-zero; }
+.release-version--past { color: var(--color-muted); }
+.pin .release-date { margin-top: var(--space-sm); color: var(--color-ink-2); }
+.change-group h3 { font-size: var(--text-xl); letter-spacing: -0.015em; }
+.change-list { margin: var(--space-sm) 0 0; padding: 0; list-style: none; border-top: var(--rule-hair) solid var(--color-rule); }
+.change-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-lg); align-items: center; padding-block: var(--space-md); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.change-list h4 { margin: 0; font-size: var(--text-md); font-weight: var(--display-weight); line-height: 1.4; color: var(--color-ink); overflow-wrap: break-word; min-width: 0; }
+.change-list p { grid-column: 1 / -1; margin: 0; max-width: 56ch; }
 
 /* Plain documents: help, privacy, terms */
 main.doc, body > main:not(.home) { color: var(--color-ink-2); }
