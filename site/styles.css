@@ -4,6 +4,8 @@
 /* Hallmark · pre-emit critique: P4 H5 E5 S4 R4 V4 · weakest: S, the sticky chapters repeat one composition, so each right column changes its object */
 /* Hallmark · waive 79 · the panel under the head is the hero's visual, ending at y 541 · the linter counts only the text block */
 /* Hallmark · waive 8 · the chapters are Feature Stack's own repeated split · each right column holds a different object */
+/* Hallmark · page: buy · job: buy · hero: price beside the Free and Pro table · signature: the price set huge · system: Console, no new tokens */
+/* Hallmark · waive 77 · buy.html has four sections, hero and footer included · it's a checkout page reached from the site and the app, not a second landing page */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -119,6 +121,7 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .amount { margin: 0; font-family: var(--font-outlier); font-size: clamp(4.5rem, 10vw, 9rem); font-variant-numeric: tabular-nums slashed-zero; letter-spacing: -0.05em; line-height: 1; color: var(--color-ink); }
 .price h2 { margin-top: var(--space-lg); }
 .price p { margin-top: var(--space-md); max-width: 40ch; }
+.price-action { margin-top: var(--space-lg); }
 .tiers { width: 100%; border-collapse: collapse; }
 .tiers th, .tiers td { padding: var(--space-sm) 0; border-bottom: var(--rule-hair) solid var(--color-rule); text-align: left; font-weight: 400; }
 .tiers thead th { font-size: var(--text-sm); font-weight: 500; }
@@ -137,6 +140,21 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .needs-grid strong { display: block; margin-bottom: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-title); font-weight: 400; color: var(--color-cool); letter-spacing: -0.02em; }
 .needs-grid p { font-size: var(--text-sm); }
 
+/* Buy */
+.buy-hero { padding-block: var(--space-2xl); background: var(--color-paper-3); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.buy-hero .container { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-2xl); align-items: center; }
+.buy-offer .amount { font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--tracking-display); }
+.buy-offer h1 { margin-top: var(--space-lg); font-size: var(--text-section); overflow-wrap: break-word; min-width: 0; }
+.buy-offer .lead { margin-top: var(--space-md); max-width: 40ch; color: var(--color-ink-2); }
+.buy-offer .btn { margin-top: var(--space-lg); }
+.buy-offer .note { max-width: 56ch; }
+.buy-steps { padding-block: var(--section-gap-s) 0; }
+.buy-steps .container { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-2xl); align-items: start; }
+.steps { margin: 0; padding: 0; list-style: none; border-top: var(--rule-hair) solid var(--color-rule); }
+.steps li { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-lg); padding-block: var(--space-lg); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.steps strong { color: var(--color-ink); font-weight: 500; }
+.close .needs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 0; }
+
 /* Footer */
 .letter { border-top: var(--rule-hair) solid var(--color-rule); background: var(--color-paper-3); padding-block: var(--space-2xl); }
 .letter .container { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-2xl); align-items: end; }
@@ -153,7 +171,8 @@ body > main:not(.home) p, body > main:not(.home) ul { margin-block: var(--space-
 
 @media (max-width: 60rem) {
   :root { --gutter: 24px; }
-  .hero-text, .instrument, .chapter .container, .price .container, .close-top, .letter .container { grid-template-columns: minmax(0, 1fr); }
+  .hero-text, .instrument, .chapter .container, .price .container, .close-top, .letter .container, .buy-hero .container, .buy-steps .container, .steps li { grid-template-columns: minmax(0, 1fr); }
+  .steps li { gap: var(--space-2xs); }
   .masthead .container { grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-md); }
   .masthead .brand { grid-row: 1; grid-column: 1; }
   .masthead .btn { padding-inline: var(--space-sm); }
