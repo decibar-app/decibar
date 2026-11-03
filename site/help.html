@@ -56,7 +56,7 @@
 
 <h2>An app doesn’t play on the device I chose</h2>
 <p>With Pro, the speaker button beside an app in Decibar chooses where it plays, and the app moves under that device. This works for apps that follow the system output. An app with its own speaker setting, such as a call app or an audio editor, ignores it until you set that app to the system output. If a device is unplugged or won’t start, its apps return to the system output, and they go back once it’s available. To clear every choice, use Reset App Outputs in Settings &gt; Sound.</p>
-<p>Devices playing the same app aren’t aligned with each other, so two speakers in one room can sound slightly out of step, and Bluetooth lags more.</p>
+<p>Devices playing the same app wait for the slowest one, so they’re heard together. Bluetooth and AirPlay devices can report their delay wrongly and still sound late. Raise that device’s value under Output Alignment in Settings &gt; Sound until the echo goes, while something is playing. Choosing Align Outputs in the app’s speaker menu opens it. When the system output is held back, video can run slightly ahead of the sound, and Settings says by how much.</p>
 
 <h2>Does Decibar record my audio?</h2>
 <p>No. Decibar doesn’t save audio or send it anywhere. While it’s processing sound, audio passes through a shared buffer on your Mac, which is cleared when playback stops. Only your user account and the system’s audio service can open that buffer. That also means another app running under your account could read it while audio plays, the same way it could read your other files.</p>
