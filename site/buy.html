@@ -27,6 +27,14 @@
   <meta property="og:image:alt" content="Decibar: volume for your monitor’s speakers on a Mac">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"Decibar Pro","url":"https://decibar.coypu.me/buy","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 15 or later","processorRequirements":"Apple silicon","softwareVersion":"1.2","downloadUrl":"https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg","image":"https://decibar.coypu.me/images/og.png","offers":{"@type":"Offer","name":"Decibar Pro","price":"9.99","priceCurrency":"USD","url":"https://decibar.coypu.me/buy"},"publisher":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Decibar","item":"https://decibar.coypu.me/"},{"@type":"ListItem","position":2,"name":"Buy Decibar Pro","item":"https://decibar.coypu.me/buy"}]}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X38BSCSK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-50X38BSCSK");
+  </script>
+  <script src="/analytics.js" defer></script>
 </head>
 
 <body>
@@ -197,13 +205,18 @@
     const PADDLE_PRICE_ID = 'pri_01m6dffq99r8swbstk29yp6fyj';
 
     const button = document.getElementById('buy'), status = document.getElementById('buyStatus');
+    const checkoutItem = { currency: 'USD', value: 9.99, items: [{ item_id: PADDLE_PRICE_ID, item_name: 'Decibar Pro', price: 9.99, quantity: 1 }] };
+    let purchased = false;
 
     if (window.Paddle) {
       if (PADDLE_CLIENT_TOKEN.startsWith('test_')) Paddle.Environment.set('sandbox');
       Paddle.Initialize({
         token: PADDLE_CLIENT_TOKEN,
         eventCallback(event) {
+          if (event.name === 'checkout.closed' && !purchased) track('checkout_closed', checkoutItem);
           if (event.name !== 'checkout.completed') return;
+          purchased = true;
+          track('purchase', { ...checkoutItem, transaction_id: event.data?.transaction_id });
           Paddle.Checkout.close();
           const email = event.data?.customer?.email;
           status.textContent = `Thanks for buying Decibar Pro. Your key is on its way to ${email ?? 'your checkout email'}. If it isn’t there in a few minutes, check spam or write to us.`;
@@ -218,6 +231,7 @@
         status.textContent = 'Checkout didn’t load. Reload the page, or write to team.dada.co+decibar@gmail.com.';
         return;
       }
+      track('begin_checkout', checkoutItem);
       Paddle.Checkout.open({
         items: [{ priceId: PADDLE_PRICE_ID, quantity: 1 }],
         settings: { displayMode: 'overlay', theme: 'dark' },
