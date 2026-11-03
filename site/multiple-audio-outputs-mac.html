@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Play Audio Through Two Outputs at Once on a Mac</title>
+  <meta name="description"
+    content="Play sound on two speakers or headphones at the same time on a Mac, with Audio MIDI Setup or an app, and send each app to the output you choose.">
+  <link rel="icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="canonical" href="https://decibar.coypu.me/multiple-audio-outputs-mac">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Decibar">
+  <meta property="og:title" content="How to Play Audio Through Two Outputs at Once on a Mac">
+  <meta property="og:description" content="Play sound on two speakers or headphones at the same time on a Mac, with Audio MIDI Setup or an app, and send each app to the output you choose.">
+  <meta property="og:url" content="https://decibar.coypu.me/multiple-audio-outputs-mac">
+  <meta property="og:image" content="https://decibar.coypu.me/images/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Decibar: volume for every app and speaker on a Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"How to Play Audio Through Two Outputs at Once on a Mac","description":"Play sound on two speakers or headphones at the same time on a Mac, with Audio MIDI Setup or an app, and send each app to the output you choose.","url":"https://decibar.coypu.me/multiple-audio-outputs-mac","image":"https://decibar.coypu.me/images/og.png","datePublished":"2026-11-03","dateModified":"2026-11-03","author":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"},"publisher":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Decibar","item":"https://decibar.coypu.me/"},{"@type":"ListItem","position":2,"name":"Two outputs at once","item":"https://decibar.coypu.me/multiple-audio-outputs-mac"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can a Mac play sound on two devices at once?","acceptedAnswer":{"@type":"Answer","text":"Yes, with a Multi-Output Device in Audio MIDI Setup or with an app. macOS on its own plays on one output."}},{"@type":"Question","name":"Why don’t my volume keys work with a Multi-Output Device?","acceptedAnswer":{"@type":"Answer","text":"A Multi-Output Device has no volume control of its own, so macOS has nothing to change. Set each device’s level in Audio MIDI Setup instead."}},{"@type":"Question","name":"Can I send different apps to different speakers?","acceptedAnswer":{"@type":"Answer","text":"Not with macOS alone. Decibar Pro lets you pick an output for each app, or several outputs for one app."}},{"@type":"Question","name":"Why does it sound like an echo?","acceptedAnswer":{"@type":"Answer","text":"Each device plays with its own delay. Decibar lines up wired devices, and lets you set a delay by hand for Bluetooth and AirPlay, where the reported delay is less accurate."}},{"@type":"Question","name":"Does it work with AirPlay?","acceptedAnswer":{"@type":"Answer","text":"AirPlay and Bluetooth add a delay of their own. If one still sounds late, raise its delay in Decibar’s Sound settings."}}]}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X38BSCSK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-50X38BSCSK");
+  </script>
+  <script src="/analytics.js" defer></script>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="/">Overview</a>
+      <a class="brand" href="/"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free<span class="btn-os"> for macOS</span></a>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>How to play audio through two outputs at once on a Mac</h1>
+          <div class="hero-aside">
+            <p class="lead">macOS plays everything on one output. Getting sound out of two takes a workaround, and each one has a cost.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free for macOS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="buy-steps">
+      <div class="container">
+        <h2>What macOS gives you.</h2>
+        <ol class="steps">
+          <li><strong>One output at a time</strong>
+            <p>System Settings &gt; Sound &gt; Output lets you pick one device, and every app follows it.</p>
+          </li>
+          <li><strong>A Multi-Output Device</strong>
+            <p>Audio MIDI Setup can join several outputs into one device, for every app at once.</p>
+          </li>
+          <li><strong>No choice for each app</strong>
+            <p>macOS can’t play music on the speakers and a call on the headphones.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>What a Multi-Output Device costs you.</h2>
+        </div>
+        <div class="doc-body">
+          <p>Audio MIDI Setup’s Multi-Output Device plays the same sound on every output in it. It has no volume control of its own, so the volume keys stop working while it’s selected, and every app goes to all of its outputs.</p>
+          <p>Outputs also play at slightly different delays. Two wired devices in the same room can sound like an echo, and Bluetooth adds more delay than a cable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="versus">
+      <div class="container">
+        <h2>Three ways to use two outputs.</h2>
+        <table class="versus-plain">
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">Cost</th>
+              <th scope="col">What changes</th>
+              <th scope="col">The catch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Multi-Output Device in Audio MIDI Setup</th>
+              <td data-name="Cost">Free</td>
+              <td data-name="What changes">Every app on every output in the device</td>
+              <td data-name="The catch">No volume keys, and no choice for each app</td>
+            </tr>
+            <tr>
+              <th scope="row">Send each app to its own output</th>
+              <td data-name="Cost">Decibar Pro</td>
+              <td data-name="What changes">Music on the speakers, a call on the headphones</td>
+              <td data-name="The catch">Installs an audio driver, with your administrator password</td>
+            </tr>
+            <tr>
+              <th scope="row">Play one app on several outputs</th>
+              <td data-name="Cost">Decibar Pro</td>
+              <td data-name="What changes">One app on two or more devices, kept in step</td>
+              <td data-name="The catch">Bluetooth and AirPlay may need a delay set by hand</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">In Decibar, every connected output keeps its own volume, and the system output stays wherever you set it.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Common questions.</h2>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>
+              <h3>Can a Mac play sound on two devices at once?</h3>
+            </summary>
+            <div class="answer">
+              <p>Yes, with a Multi-Output Device in Audio MIDI Setup or with an app. macOS on its own plays on one output.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Why don’t my volume keys work with a Multi-Output Device?</h3>
+            </summary>
+            <div class="answer">
+              <p>A Multi-Output Device has no volume control of its own, so macOS has nothing to change. Set each device’s level in Audio MIDI Setup instead.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Can I send different apps to different speakers?</h3>
+            </summary>
+            <div class="answer">
+              <p>Not with macOS alone. Decibar Pro lets you pick an output for each app, or several outputs for one app.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Why does it sound like an echo?</h3>
+            </summary>
+            <div class="answer">
+              <p>Each device plays with its own delay. Decibar lines up wired devices, and lets you set a delay by hand for Bluetooth and AirPlay, where the reported delay is less accurate.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Does it work with AirPlay?</h3>
+            </summary>
+            <div class="answer">
+              <p>AirPlay and Bluetooth add a delay of their own. If one still sounds late, raise its delay in Decibar’s Sound settings.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="container">
+        <div class="close-top">
+          <div>
+            <h2>Send each app where it belongs.</h2>
+            <p class="lead">Pro is free for 14 days, so you can try outputs for each app on your own devices before you buy.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free for macOS</a>
+          </div>
+          <div class="sources">
+            <p>Decibar needs macOS 15 or later on Apple silicon. Pro is $9.99 once. <a href="/buy">See what Pro adds</a>.</p>
+            <p>More guides: <a href="/per-app-volume-mac">Per-app volume on Mac</a>. <a href="/lower-audio-during-calls-mac">Quieter audio on calls</a>. <a href="/system-wide-eq-mac">System-wide EQ on Mac</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Found a monitor that behaves differently? Write to us.</p>
+        <a class="brand" href="/"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 15 or later on Apple silicon.</span></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+        <li><a href="/volume-methods">How it works</a></li>
+        <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
+        <li><a href="/per-app-volume-mac">Per-app volume</a></li>
+        <li><a href="/multiple-audio-outputs-mac">Two outputs at once</a></li>
+        <li><a href="/lower-audio-during-calls-mac">Quieter calls</a></li>
+        <li><a href="/system-wide-eq-mac">System-wide EQ</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
+        <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+
+</html>

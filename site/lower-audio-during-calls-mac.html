@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Lower Music Automatically During Calls on a Mac</title>
+  <meta name="description"
+    content="macOS keeps music and videos at full volume during Zoom, Teams and FaceTime calls. Here’s how to make other audio drop when a call starts.">
+  <link rel="icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="canonical" href="https://decibar.coypu.me/lower-audio-during-calls-mac">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Decibar">
+  <meta property="og:title" content="How to Lower Music Automatically During Calls on a Mac">
+  <meta property="og:description" content="macOS keeps music and videos at full volume during Zoom, Teams and FaceTime calls. Here’s how to make other audio drop when a call starts.">
+  <meta property="og:url" content="https://decibar.coypu.me/lower-audio-during-calls-mac">
+  <meta property="og:image" content="https://decibar.coypu.me/images/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Decibar: volume for every app and speaker on a Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"How to Lower Music Automatically During Calls on a Mac","description":"macOS keeps music and videos at full volume during Zoom, Teams and FaceTime calls. Here’s how to make other audio drop when a call starts.","url":"https://decibar.coypu.me/lower-audio-during-calls-mac","image":"https://decibar.coypu.me/images/og.png","datePublished":"2026-11-03","dateModified":"2026-11-03","author":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"},"publisher":{"@type":"Organization","name":"Dada Workroom","url":"https://decibar.coypu.me/","email":"team.dada.co+decibar@gmail.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Decibar","item":"https://decibar.coypu.me/"},{"@type":"ListItem","position":2,"name":"Quieter audio on calls","item":"https://decibar.coypu.me/lower-audio-during-calls-mac"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does macOS lower other audio during calls?","acceptedAnswer":{"@type":"Answer","text":"No. macOS has no setting for it, so music and videos keep playing at the same level."}},{"@type":"Question","name":"Which call apps work?","acceptedAnswer":{"@type":"Answer","text":"Any app that uses the microphone. You choose which apps count as calls, so Zoom, Teams, FaceTime, Slack, Discord and browser calls can all work."}},{"@type":"Question","name":"Does Decibar listen to my calls?","acceptedAnswer":{"@type":"Answer","text":"No. It notices that an app is using the microphone, without recording or reading the audio, and doesn’t ask for microphone permission."}},{"@type":"Question","name":"Does the music come back after the call?","acceptedAnswer":{"@type":"Answer","text":"Yes. When the call app stops using the microphone, other apps return to their levels."}},{"@type":"Question","name":"Is this free?","acceptedAnswer":{"@type":"Answer","text":"Call ducking is part of Decibar Pro, which is $9.99 once and free to try for 14 days."}}]}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X38BSCSK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-50X38BSCSK");
+  </script>
+  <script src="/analytics.js" defer></script>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="240 300 500 424">
+      <path fill="currentColor"
+        d="M288 430h62l130-100c16-12 32-2 32 22v320c0 24-16 34-32 22L350 594h-62a26 26 0 0 1-26-26V456a26 26 0 0 1 26-26z" />
+      <g fill="none" stroke="currentColor" stroke-width="34" stroke-linecap="round">
+        <path d="M572 442a92 92 0 0 1 0 140" />
+        <path d="M634 358a196 196 0 0 1 0 308" />
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="masthead" id="top">
+    <div class="container">
+      <a class="nav-link" href="/">Overview</a>
+      <a class="brand" href="/"><svg aria-hidden="true">
+          <use href="#logo" />
+        </svg>Decibar</a>
+      <a class="btn btn--quiet"
+        href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free<span class="btn-os"> for macOS</span></a>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>How to lower music automatically during calls on a Mac</h1>
+          <div class="hero-aside">
+            <p class="lead">macOS keeps music and videos playing at the same level when a call starts, so you reach for the volume every time.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free for macOS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="buy-steps">
+      <div class="container">
+        <h2>What macOS gives you.</h2>
+        <ol class="steps">
+          <li><strong>No ducking setting</strong>
+            <p>System Settings has no option to lower other audio during calls.</p>
+          </li>
+          <li><strong>Pause by hand</strong>
+            <p>You stop the music, take the call, and remember to start it again.</p>
+          </li>
+          <li><strong>Turn the call up</strong>
+            <p>Raising the call app’s own volume makes everything louder, not just the voice.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>How call ducking works.</h2>
+        </div>
+        <div class="doc-body">
+          <p>A call app starts using the microphone when a call begins. An app that watches for that can lower every other app until the microphone stops, then bring them back.</p>
+          <p>Decibar watches which apps use the microphone without recording anything, so it doesn’t need microphone permission. You choose which apps count as calls.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="versus">
+      <div class="container">
+        <h2>Three ways to keep calls clear.</h2>
+        <table class="versus-plain">
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">Cost</th>
+              <th scope="col">What changes</th>
+              <th scope="col">The catch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Pause other audio by hand</th>
+              <td data-name="Cost">Free</td>
+              <td data-name="What changes">Silence while you remember to pause</td>
+              <td data-name="The catch">Easy to forget, and you have to start it again</td>
+            </tr>
+            <tr>
+              <th scope="row">Mute apps one by one</th>
+              <td data-name="Cost">Free with Decibar</td>
+              <td data-name="What changes">Per-app volume puts each app on its own slider</td>
+              <td data-name="The catch">Still by hand, for every call</td>
+            </tr>
+            <tr>
+              <th scope="row">Lower other audio automatically</th>
+              <td data-name="Cost">Decibar Pro</td>
+              <td data-name="What changes">Other apps drop when a call app takes the mic, and come back after</td>
+              <td data-name="The catch">An app that was already playing when the call started can take a few seconds to drop</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">Decibar also lowers other audio for apps you add yourself, not only Zoom, Teams and FaceTime.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="container">
+        <div class="pin">
+          <h2>Common questions.</h2>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>
+              <h3>Does macOS lower other audio during calls?</h3>
+            </summary>
+            <div class="answer">
+              <p>No. macOS has no setting for it, so music and videos keep playing at the same level.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Which call apps work?</h3>
+            </summary>
+            <div class="answer">
+              <p>Any app that uses the microphone. You choose which apps count as calls, so Zoom, Teams, FaceTime, Slack, Discord and browser calls can all work.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Does Decibar listen to my calls?</h3>
+            </summary>
+            <div class="answer">
+              <p>No. It notices that an app is using the microphone, without recording or reading the audio, and doesn’t ask for microphone permission.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Does the music come back after the call?</h3>
+            </summary>
+            <div class="answer">
+              <p>Yes. When the call app stops using the microphone, other apps return to their levels.</p>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <h3>Is this free?</h3>
+            </summary>
+            <div class="answer">
+              <p>Call ducking is part of Decibar Pro, which is $9.99 once and free to try for 14 days.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="container">
+        <div class="close-top">
+          <div>
+            <h2>Let calls turn the music down.</h2>
+            <p class="lead">Pro is free for 14 days. Pick your call apps once, and other audio drops on every call after that.</p>
+            <a class="btn"
+              href="https://github.com/decibar-app/decibar/releases/download/downloads/Decibar.dmg">Download free for macOS</a>
+          </div>
+          <div class="sources">
+            <p>Decibar needs macOS 15 or later on Apple silicon. <a href="/buy">See what Pro adds</a>.</p>
+            <p>More guides: <a href="/per-app-volume-mac">Per-app volume on Mac</a>. <a href="/multiple-audio-outputs-mac">Two outputs at once</a>. <a href="/system-wide-eq-mac">System-wide EQ on Mac</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="letter">
+    <div class="container">
+      <div>
+        <p class="letter-note">Found a monitor that behaves differently? Write to us.</p>
+        <a class="brand" href="/"><svg aria-hidden="true">
+            <use href="#logo" />
+          </svg>Decibar</a>
+      </div>
+      <ul>
+        <li><span>Requires macOS 15 or later on Apple silicon.</span></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+        <li><a href="/volume-methods">How it works</a></li>
+        <li><a href="/hdmi-volume-mac">HDMI volume on Mac</a></li>
+        <li><a href="/per-app-volume-mac">Per-app volume</a></li>
+        <li><a href="/multiple-audio-outputs-mac">Two outputs at once</a></li>
+        <li><a href="/lower-audio-during-calls-mac">Quieter calls</a></li>
+        <li><a href="/system-wide-eq-mac">System-wide EQ</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
+        <li><a href="mailto:team.dada.co+decibar@gmail.com">team.dada.co+decibar@gmail.com</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+
+</html>
