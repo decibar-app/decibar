@@ -1,3 +1,6 @@
+/* Hallmark · theme: custom · redesign: full (index), restyle (every other page) · idea: "a desk scrapbook of your audio setup: the product pinned, taped and labelled like travel keepsakes" · vibe: "warm paper, die-cut stickers, taped prints, soft" · paper oklch(96.5% 0.014 55) blush, chosen by the owner's reference · accent: the kept amber brand, with coral, sky, mint and lilac as sticker colours · faces: Host Grotesk (kept brand), Caveat for handwritten notes only, Atkinson Hyperlegible Mono for readings · hero: the menu in motion as a taped print ringed by connector stickers · signature: the real popover video on a tilted print · axes: light/grotesk-heavy/chromatic-amber · posture: soft · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V5 · weakest: S, chapters still share one split, so each print tilts its own way and carries its own sticker */
+/* The reference sets one italic coloured word per head; the Floor forbids it, so the colour moves to stickers and the heads stay one weight and colour */
 /* Hallmark · shape: Feature Stack · genre: modern-minimal · theme: Console (deal 3/3, seed mac-menu-bar-app-5194·4da2984c·2026-11-02·r0) · redesign: full · draw: 06871f
  * hero: Banner · nav: masthead · footer: letter close · imagery: the product, captured and built · signature: a decibel reading the visitor moves in sixteen steps, on the app's own gain curve · console: graphite
  * axes: dark/grotesk-sans/chromatic-amber · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
@@ -30,7 +33,7 @@ a:hover { color: var(--color-accent); }
 a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--space-lg); border: var(--rule-hair) solid var(--color-accent); border-radius: var(--radius-pill); background: var(--color-accent); color: var(--color-accent-ink); font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color var(--dur-short) var(--ease-out); }
-.btn:hover { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.btn:hover { background: var(--color-ink-2); border-color: var(--color-ink-2); color: var(--color-paper-2); }
 .btn:active { transform: translateY(1px); }
 .btn:focus-visible { outline-offset: 3px; }
 .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
@@ -294,4 +297,95 @@ body > main:not(.home) p, body > main:not(.home) ul { margin-block: var(--space-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .seg label, .bar i, .faq-list h3 { transition: none; }
+}
+
+/* Scrapbook layer */
+body { background: var(--color-paper); color: var(--color-ink-2); }
+h1, h2 { letter-spacing: var(--tracking-display); }
+.btn { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper-2); box-shadow: 0 10px 20px -10px var(--color-shadow); transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
+.btn:hover { background: var(--color-ink-2); border-color: var(--color-ink-2); color: var(--color-paper-2); transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+.btn--quiet { background: var(--color-paper-2); border-color: var(--color-rule-2); color: var(--color-ink); box-shadow: none; }
+.btn--quiet:hover { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-ink); }
+a:hover { color: var(--color-cool); }
+.masthead { border-bottom: 0; }
+.panels { gap: 0; background: var(--color-paper-2); border: 0; box-shadow: var(--shadow-card); }
+.panels > * { background: var(--color-paper-2); }
+.panels > * + * { border-left: var(--rule-hair) dashed var(--color-rule-2); }
+.panels.panels > .panel-pad, .needs-grid > div:first-child, .spec > div:first-child, .routes > div:first-child, .choice-grid > div:first-child { border-left: 0; }
+.measured, .reading, .reading-s, .route, .needs-grid strong, .release-version:not(.release-version--past) { color: var(--color-cool); }
+.meter::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: linear-gradient(to right, var(--color-accent) var(--v), var(--color-paper-3) var(--v)); }
+.meter::-moz-range-track { height: 8px; border-radius: 4px; background: var(--color-paper-3); }
+.meter::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--color-accent); }
+.meter::-webkit-slider-thumb { width: 24px; height: 24px; margin-top: calc(var(--space-xs) * -1); border: 3px solid var(--color-sticker-edge); border-radius: 50%; background: var(--color-accent); box-shadow: 0 2px 6px var(--color-shadow); }
+.meter::-moz-range-thumb { width: 24px; height: 24px; border: 3px solid var(--color-sticker-edge); border-radius: 50%; background: var(--color-accent); box-shadow: 0 2px 6px var(--color-shadow); }
+.bar i { background: var(--color-sky); border-radius: 6px; }
+.seg label { background: var(--color-paper-2); }
+.seg input:checked + label { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); }
+
+/* Stickers: die-cut labels with a white edge */
+.tag, .sticker { display: inline-block; padding: var(--space-2xs) var(--space-sm); border: 3px solid var(--color-sticker-edge); border-radius: var(--radius-pill); background: var(--color-lilac); color: var(--color-ink); font-size: var(--text-sm); font-weight: 700; box-shadow: 0 6px 12px -6px var(--color-shadow); }
+.tag { transform: rotate(-3deg); }
+.tag--free { background: var(--color-mint); transform: rotate(2deg); }
+.sticker { position: absolute; z-index: 2; font-size: var(--text-lg); color: var(--color-on-sticker); white-space: nowrap; }
+.sticker--coral { background: var(--color-coral); top: 6%; left: -14%; transform: rotate(-9deg); }
+.sticker--sky { background: var(--color-cool); top: 38%; right: -16%; transform: rotate(7deg); }
+.sticker--mint { background: var(--color-ok); bottom: 16%; left: -10%; transform: rotate(-4deg); }
+
+/* Hero: the menu as a taped print */
+.hero { padding-block: var(--space-xl) var(--section-gap-s); }
+.hero h1 { font-size: clamp(2.75rem, 4.6vw + 0.5rem, 4.75rem); line-height: 1; }
+.hero-demo { position: relative; padding: var(--space-sm) var(--space-sm) 0; background: var(--color-paper-2); border-radius: 8px; box-shadow: var(--shadow-card); transform: rotate(2.5deg); }
+.hero-demo::before, .shot::before, .diff-sheet::before { content: ""; position: absolute; z-index: 3; top: -14px; left: 50%; width: 112px; height: 28px; translate: -50% 0; rotate: -4deg; background: var(--color-tape); }
+.hero-demo video { border-radius: 4px; }
+.hero-demo figcaption { padding: var(--space-xs) var(--space-2xs) var(--space-sm); font-family: var(--font-hand); font-size: 1.375rem; line-height: 1.2; color: var(--color-ink-2); }
+.hero-demo .text-button { font-family: var(--font-body); font-size: var(--text-sm); }
+
+/* Compare: a notebook sheet */
+.compare .container > h2 { margin-bottom: var(--space-xl); }
+.diff { border: 0; border-radius: var(--radius-card); background: var(--color-paper-2); box-shadow: var(--shadow-card); }
+.diff th, .diff td { border-bottom: var(--rule-hair) dashed var(--color-rule-2); }
+.diff thead th { color: var(--color-ink-2); }
+
+/* Chapters: each print tilts its own way */
+.chapter { border-top: 0; }
+.chapter .captures > * { transition: transform var(--dur-long) var(--ease-out); }
+.chapter:nth-of-type(odd) .captures > :first-child { transform: rotate(-1.2deg); }
+.chapter:nth-of-type(even) .captures > :first-child { transform: rotate(1.2deg); }
+.chapter .captures > :nth-child(2) { transform: rotate(-0.6deg); }
+.shot { position: relative; padding: var(--space-sm); background: var(--color-paper-2); border-radius: 8px; box-shadow: var(--shadow-card); }
+.shot img { border-radius: 4px; }
+.shot figcaption { padding-inline: var(--space-2xs); font-family: var(--font-hand); font-size: 1.375rem; line-height: 1.2; color: var(--color-ink-2); }
+.trail { border-left: 2px dashed var(--color-accent); }
+.trail li { position: relative; }
+.trail li::before { content: ""; position: absolute; left: -8px; top: 0.45em; width: 14px; height: 14px; border: 3px solid var(--color-accent); border-radius: 50%; background: var(--color-paper); }
+
+/* Price: a sticker price tag */
+.price { background: var(--color-accent-soft); border-block: 0; }
+.amount { font-family: var(--font-display); font-weight: 700; }
+.price-tag { display: inline-block; padding: 0.08em 0.32em 0.12em; border: 6px solid var(--color-sticker-edge); border-radius: 0.28em; background: var(--color-accent); color: var(--color-accent-ink); box-shadow: 0 18px 30px -16px var(--color-shadow); transform: rotate(-4deg); }
+.tiers { background: var(--color-paper-2); border-radius: var(--radius-card); box-shadow: var(--shadow-card); border-collapse: separate; border-spacing: 0; overflow: clip; }
+.tiers th, .tiers td { padding-inline: var(--space-lg); border-bottom-style: dashed; }
+.tiers tr:last-child th, .tiers tr:last-child td { border-bottom: 0; }
+.tiers td, .tiers thead th:not(:first-child) { width: 96px; }
+
+/* Close and footer */
+.close .shot { transform: rotate(-2deg); }
+.needs-grid { margin-top: var(--section-gap-s); }
+.letter { background: var(--color-paper-3); border-top: 0; }
+.letter-note { font-family: var(--font-hand); font-size: 2rem; line-height: 1.1; color: var(--color-ink); }
+
+/* Other pages pick up the paper surfaces */
+.buy-hero, .choice, .routes > div:last-child { background: var(--color-accent-soft); border-block: 0; }
+.faq-list, .steps, .change-list { border-top-style: dashed; }
+.faq-list details, .steps li, .change-list li { border-bottom-style: dashed; }
+
+@media (max-width: 60rem) {
+  .hero-demo { margin-inline: var(--space-lg); transform: rotate(1.5deg); }
+  .sticker--coral { left: -6%; } .sticker--sky { right: -6%; } .sticker--mint { left: -4%; }
+  .panels > * + * { border-left: 0; border-top: var(--rule-hair) dashed var(--color-rule-2); }
+  .needs-grid > div:nth-child(3) { border-top: var(--rule-hair) dashed var(--color-rule-2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter .captures > * { transition: none; }
 }
